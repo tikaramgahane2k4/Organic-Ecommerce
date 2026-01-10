@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}Order Successful - Green Harvest{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <div class="success-container">
+            <div class="success-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            
+            <h1>Order Placed Successfully!</h1>
+            <p class="success-message">Thank you for your order. We'll send you a confirmation email shortly.</p>
+            
+            <div class="order-details-box">
+                <h3>Order Details</h3>
+                
+                <div class="order-info">
+                    <div class="info-row">
+                        <span class="label">Order ID:</span>
+                        <span class="value">#{{ order.id }}</span>
+                    </div>
+                    
+                    <div class="info-row">
+                        <span class="label">Date:</span>
+                        <span class="value">{{ order.created_at.strftime('%B %d, %Y at %I:%M %p') }}</span>
+                    </div>
+                    
+                    <div class="info-row">
+                        <span class="label">Total Amount:</span>
+                        <span class="value">₹{{ "%.2f"|format(order.total_amount) }}</span>
+                    </div>
+                    
+                    <div class="info-row">
+                        <span class="label">Status:</span>
+                        <span class="value status-badge">{{ order.status|title }}</span>
+                    </div>
+                </div>
+                
+                <div class="shipping-info">
+                    <h4>Shipping Address</h4>
+                    <p>{{ order.shipping_name }}</p>
+                    <p>{{ order.shipping_address }}</p>
+                    <p>{{ order.shipping_city }}, {{ order.shipping_postal_code }}</p>
+                    <p>{{ order.shipping_country }}</p>
+                </div>
+                
+                <div class="order-items">
+                    <h4>Order Items</h4>
+                    {% for item in order.order_items %}
+                        <div class="order-item-row">
+                            <span>{{ item.product.name }} (x{{ item.quantity }})</span>
+                            <span>₹{{ "%.2f"|format(item.price * item.quantity) }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <div class="success-actions">
+                <a href="{{ url_for('account') }}" class="btn btn-primary">View My Orders</a>
+                <a href="{{ url_for('categories') }}" class="btn btn-outline">Continue Shopping</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

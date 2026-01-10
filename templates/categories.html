@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+
+{% block title %}Categories - Green Harvest{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <div class="page-header">
+            <h1>
+                {% if search_query %}
+                Search Results for "{{ search_query }}"
+                {% elif current_category %}
+                {{ current_category.name }}
+                {% else %}
+                All Products
+                {% endif %}
+            </h1>
+            <p>
+                {% if search_query %}
+                Found {{ products|length }} product(s) matching your search
+                {% else %}
+                Browse our wide range of organic products
+                {% endif %}
+            </p>
+        </div>
+
+        <div class="categories-wrapper">
+            <!-- Left Sidebar Filters -->
+            <aside class="filters-sidebar">
+                <!-- Category Filter -->
+                <div class="filter-group">
+                    <h3 class="filter-title">
+                        <i class="fas fa-list"></i> Categories
+                    </h3>
+                    <div class="filter-options">
+                        <a href="{{ url_for('categories') }}"
+                            class="filter-option {% if not current_category %}active{% endif %}">
+                            <span>All Products</span>
+                        </a>
+                        {% for category in categories %}
+                        <a href="{{ url_for('categories', category=category.id) }}"
+                            class="filter-option {% if current_category and current_category.id == category.id %}active{% endif %}">
+                            <span>{{ category.name }}</span>
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Price Filter -->
+                <div class="filter-group">
+                    <h3 class="filter-title">
+                        <i class="fas fa-tag"></i> Price
+                    </h3>
+                    <div class="filter-options">
+                        <a href="{{ url_for('categories', category=current_category.id if current_category else '', search=search_query, sort='low_to_high') }}"
+                            class="filter-option {% if request.args.get('sort') == 'low_to_high' %}active{% endif %}">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>Low to High</span>
+                        </a>
+                        <a href="{{ url_for('categories', category=current_category.id if current_category else '', search=search_query, sort='high_to_low') }}"
+                            class="filter-option {% if request.args.get('sort') == 'high_to_low' %}active{% endif %}">
+                            <i class="fas fa-arrow-down"></i>
+                            <span>High to Low</span>
+                        </a>
+                    </div>
+
+                    <!-- Price Range Input -->
+                    <div class="price-range-filter">
+                        <label for="min_price">Min: ₹</label>
+                        <input type="number" id="min_price" placeholder="100"
+                            value="{{ request.args.get('price_min', '') }}" class="price-input">
+
+                        <label for="max_price">Max: ₹</label>
+                        <input type="number" id="max_price" placeholder="10000"
+                            value="{{ request.args.get('price_max', '') }}" class="price-input">
+
+                        <button class="btn-apply-price" onclick="applyPriceFilter()">Apply</button>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Main Content Area -->
+            <div class="products-area">
+                {% if products %}
+                <div class="products-grid">
+                    {% for product in products %}
+                    <div class="product-card">
+                        <a href="{{ url_for('product_detail', product_id=product.id) }}">
+                            <div class="product-image">
+                                {% if product.image %}
+                                <img src="{{ url_for('static', filename='images/' + product.image) }}"
+                                    alt="{{ product.name }}">
+                                {% else %}
+                                <img src="{{ url_for('static', filename='images/placeholder.jpg') }}"
+                                    alt="{{ product.name }}">
+                                {% endif %}
+                                <span class="badge-organic">Organic</span>
+                            </div>
+                        </a>
+
+                        <div class="product-info">
+                            <div class="product-header">
+                                <h3><a href="{{ url_for('product_detail', product_id=product.id) }}">{{ product.name }}</a>
+                                </h3>
+                                <span class="price">₹{{ "%.2f"|format(product.price) }}</span>
+                            </div>
+                            <p class="product-category">{{ product.category.name }}</p>
+                            <div class="product-footer">
+                                <div class="product-actions">
+                                    <button class="btn-icon add-to-wishlist" data-product-id="{{ product.id }}"
+                                        title="Add to Wishlist">
+                                        <i class="far fa-heart"></i>
+                                    </button>
+                                    <div class="cart-action" data-product-id="{{ product.id }}">
+                                        {% if cart_quantities.get(product.id) %}
+                                        <div class="qty-control" data-product-id="{{ product.id }}">
+                                            <button type="button" class="qty-btn" data-action="decrement"
+                                                aria-label="Decrease quantity">-</button>
+                                            <span class="qty-value">{{ cart_quantities[product.id] }}</span>
+                                            <button type="button" class="qty-btn" data-action="increment"
+                                                aria-label="Increase quantity">+</button>
+                                        </div>
+                                        {% else %}
+                                        <button type="button" class="btn-add-cart quick-add"
+                                            data-product-id="{{ product.id }}" title="Add to Cart">
+                                            <i class="fas fa-shopping-bag"></i>
+                                            <span>Add to Cart</span>
+                                        </button>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="empty-state">
+                    <i class="fas fa-box-open"></i>
+                    <h3>No Products Found</h3>
+                    <p>
+                        {% if search_query %}
+                        No products match your search "{{ search_query }}". Try different keywords.
+                        {% else %}
+                        We couldn't find any products in this category.
+                        {% endif %}
+                    </p>
+                    <a href="{{ url_for('categories') }}" class="btn btn-primary">View All Products</a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block title %}Shop - Green Harvest{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <div class="page-header">
+            <h1>
+                {% if current_category %}
+                {{ current_category.name }}
+                {% else %}
+                All Products
+                {% endif %}
+            </h1>
+            <p>Fresh, organic products for a healthy lifestyle</p>
+        </div>
+
+        <!-- Category Filter -->
+        <div class="filter-bar">
+            <div class="category-filters">
+                <a href="{{ url_for('shop') }}" class="filter-btn {% if not current_category %}active{% endif %}">
+                    All Products
+                </a>
+                {% for category in categories %}
+                <a href="{{ url_for('shop', category=category.id) }}"
+                    class="filter-btn {% if current_category and current_category.id == category.id %}active{% endif %}">
+                    {{ category.name }}
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Products Grid -->
+        {% if products %}
+        <div class="products-grid">
+            {% for product in products %}
+            <div class="product-card">
+                <a href="{{ url_for('product_detail', product_id=product.id) }}">
+                    <div class="product-image">
+                        {% if product.image %}
+                        <img src="{{ url_for('static', filename='images/' + product.image) }}" alt="{{ product.name }}">
+                        {% else %}
+                        <img src="{{ url_for('static', filename='images/placeholder.jpg') }}" alt="{{ product.name }}">
+                        {% endif %}
+                        <span class="badge-organic">Organic</span>
+                    </div>
+                </a>
+
+                <div class="product-info">
+                    <div class="product-header">
+                        <h3><a href="{{ url_for('product_detail', product_id=product.id) }}">{{ product.name }}</a></h3>
+                        <span class="price">₹{{ "%.2f"|format(product.price) }}</span>
+                    </div>
+                    <p class="product-category">{{ product.category.name }}</p>
+                    <div class="product-footer">
+                        <div class="product-actions">
+                            <button class="btn-icon add-to-wishlist" data-product-id="{{ product.id }}"
+                                title="Add to Wishlist">
+                                <i class="far fa-heart"></i>
+                            </button>
+                            <div class="cart-action" data-product-id="{{ product.id }}">
+                                {% if cart_quantities.get(product.id) %}
+                                <div class="qty-control" data-product-id="{{ product.id }}">
+                                    <button type="button" class="qty-btn" data-action="decrement"
+                                        aria-label="Decrease quantity">-</button>
+                                    <span class="qty-value">{{ cart_quantities[product.id] }}</span>
+                                    <button type="button" class="qty-btn" data-action="increment"
+                                        aria-label="Increase quantity">+</button>
+                                </div>
+                                {% else %}
+                                <button type="button" class="btn-add-cart quick-add"
+                                    data-product-id="{{ product.id }}" title="Add to Cart">
+                                    <i class="fas fa-shopping-bag"></i>
+                                    <span>Add to Cart</span>
+                                </button>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <i class="fas fa-box-open"></i>
+            <h3>No Products Found</h3>
+            <p>We couldn't find any products in this category.</p>
+            <a href="{{ url_for('shop') }}" class="btn btn-primary">View All Products</a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

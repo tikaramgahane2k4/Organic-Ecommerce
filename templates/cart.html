@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+
+{% block title %}Shopping Cart - Green Harvest{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <div class="page-header">
+            <h1><i class="fas fa-shopping-cart"></i> Shopping Cart</h1>
+            <p>Review your items before checkout</p>
+        </div>
+        
+        {% if cart_items %}
+            <div class="cart-container">
+                <div class="cart-items-section">
+                    {% for item in cart_items %}
+                        <div class="cart-item-card">
+                            <a href="{{ url_for('product_detail', product_id=item.product.id) }}" class="item-image">
+                                {% if item.product.image %}
+                                    <img src="{{ url_for('static', filename='images/' + item.product.image) }}" alt="{{ item.product.name }}">
+                                {% else %}
+                                    <img src="{{ url_for('static', filename='images/placeholder.jpg') }}" alt="{{ item.product.name }}">
+                                {% endif %}
+                            </a>
+                            
+                            <div class="item-info">
+                                <h3><a href="{{ url_for('product_detail', product_id=item.product.id) }}">{{ item.product.name }}</a></h3>
+                                <p class="item-category"><i class="fas fa-tag"></i> {{ item.product.category.name }}</p>
+                                <p class="item-price-unit">₹{{ "%.2f"|format(item.product.price) }} per unit</p>
+                            </div>
+                            
+                            <div class="item-actions">
+                                <div class="quantity-control">
+                                    <button type="button" class="qty-btn qty-minus" data-cart-id="{{ item.id }}" data-quantity="{{ item.quantity - 1 }}">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                    <span class="qty-display">{{ item.quantity }}</span>
+                                    <button type="button" class="qty-btn qty-plus" data-cart-id="{{ item.id }}" data-quantity="{{ item.quantity + 1 }}">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                </div>
+                                
+                                <div class="item-total-price">
+                                    <span class="total-label">Total</span>
+                                    <span class="total-amount">₹{{ "%.2f"|format(item.product.price * item.quantity) }}</span>
+                                </div>
+                                
+                                <form action="{{ url_for('remove_from_cart', cart_id=item.id) }}" method="POST" class="remove-form">
+                                    <button type="submit" class="btn-remove" title="Remove item">
+                                        <i class="fas fa-trash-alt"></i> Remove
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                
+                <div class="cart-summary">
+                    <h3><i class="fas fa-receipt"></i> Order Summary</h3>
+                    
+                    <div class="summary-details">
+                        <div class="summary-row">
+                            <span>Subtotal ({{ cart_items|length }} items)</span>
+                            <span>₹{{ "%.2f"|format(total) }}</span>
+                        </div>
+                        
+                        <div class="summary-row">
+                            <span>Shipping</span>
+                            <span class="free-badge">Free</span>
+                        </div>
+                        
+                        <div class="summary-divider"></div>
+                        
+                        <div class="summary-row summary-total">
+                            <span>Total Amount</span>
+                            <span>₹{{ "%.2f"|format(total) }}</span>
+                        </div>
+                    </div>
+                    
+                    <a href="{{ url_for('checkout') }}" class="btn btn-primary btn-block">
+                        <i class="fas fa-lock"></i> Proceed to Checkout
+                    </a>
+                    
+                    <a href="{{ url_for('categories') }}" class="btn btn-outline btn-block">
+                        <i class="fas fa-arrow-left"></i> Continue Shopping
+                    </a>
+                    
+                    <div class="secure-checkout">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Secure Checkout</span>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <i class="fas fa-shopping-cart"></i>
+                <h3>Your Cart is Empty</h3>
+                <p>Add some products to get started!</p>
+                <a href="{{ url_for('categories') }}" class="btn btn-primary">Start Shopping</a>
+            </div>
+        {% endif %}
+    </div>
+</section>
+
+<script>
+function updateQuantity(cartId, newQuantity) {
+    if (newQuantity < 1) return;
+    
+    fetch(`/cart/update/${cartId}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `quantity=${newQuantity}`
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            location.reload();
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+// Attach event listeners to quantity buttons
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.qty-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const cartId = this.getAttribute('data-cart-id');
+            const quantity = parseInt(this.getAttribute('data-quantity'));
+            updateQuantity(cartId, quantity);
+        });
+    });
+});
+</script>
+{% endblock %}

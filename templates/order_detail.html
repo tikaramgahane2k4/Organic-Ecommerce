@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block title %}Order #{{ order.id }} - Green Harvest{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <div class="page-header">
+            <h1>Order Details</h1>
+            <p>Order #{{ order.id }}</p>
+        </div>
+        
+        <div class="order-detail-container">
+            <!-- Order Summary -->
+            <div class="order-summary-card">
+                <div class="order-summary-header">
+                    <div>
+                        <h2>Order #{{ order.id }}</h2>
+                        <p class="order-date">
+                            <i class="far fa-calendar"></i>
+                            Placed on {{ order.created_at.strftime('%B %d, %Y at %I:%M %p') }}
+                        </p>
+                    </div>
+                    <div class="order-status-badge">
+                        <span class="status-badge status-{{ order.status }}">
+                            {{ order.status|title }}
+                        </span>
+                    </div>
+                </div>
+                
+                <!-- Order Items -->
+                <div class="order-items-section">
+                    <h3>Order Items</h3>
+                    <div class="order-items-list">
+                        {% for item in order.order_items %}
+                            <div class="order-detail-item">
+                                <div class="item-image">
+                                    {% if item.product.image %}
+                                        <img src="{{ url_for('static', filename='images/' + item.product.image) }}" alt="{{ item.product.name }}">
+                                    {% else %}
+                                        <img src="{{ url_for('static', filename='images/placeholder.jpg') }}" alt="{{ item.product.name }}">
+                                    {% endif %}
+                                </div>
+                                <div class="item-details">
+                                    <h4>{{ item.product.name }}</h4>
+                                    <p class="item-description">{{ item.product.description[:100] }}...</p>
+                                    <div class="item-meta">
+                                        <span class="quantity">Quantity: {{ item.quantity }}</span>
+                                        <span class="price">₹{{ "%.2f"|format(item.price) }} each</span>
+                                    </div>
+                                </div>
+                                <div class="item-total">
+                                    <p class="subtotal-label">Subtotal</p>
+                                    <p class="subtotal-amount">₹{{ "%.2f"|format(item.price * item.quantity) }}</p>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <!-- Order Total -->
+                <div class="order-total-section">
+                    <div class="total-row">
+                        <span>Subtotal</span>
+                        <span>₹{{ "%.2f"|format(order.total_amount) }}</span>
+                    </div>
+                    <div class="total-row">
+                        <span>Shipping</span>
+                        <span>Free</span>
+                    </div>
+                    <div class="total-row total-final">
+                        <span>Total</span>
+                        <span>₹{{ "%.2f"|format(order.total_amount) }}</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Shipping Information -->
+            <div class="shipping-info-card">
+                <h3>
+                    <i class="fas fa-shipping-fast"></i>
+                    Shipping Information
+                </h3>
+                <div class="shipping-details">
+                    <p><strong>{{ order.shipping_name }}</strong></p>
+                    <p>{{ order.shipping_email }}</p>
+                    <p>{{ order.shipping_address }}</p>
+                    <p>{{ order.shipping_city }}, {{ order.shipping_postal_code }}</p>
+                    <p>{{ order.shipping_country }}</p>
+                </div>
+                
+                <div class="order-actions">
+                    <a href="{{ url_for('account') }}" class="btn btn-outline">
+                        <i class="fas fa-arrow-left"></i> Back to Orders
+                    </a>
+                    {% if order.status in ['pending', 'processing'] %}
+                    <form action="{{ url_for('cancel_order', order_id=order.id) }}" method="POST" class="inline-form">
+                        <button type="submit" class="btn btn-danger" onclick="return confirm('Cancel this order?')">
+                            <i class="fas fa-ban"></i> Cancel Order
+                        </button>
+                    </form>
+                    {% endif %}
+                    <a href="{{ url_for('categories') }}" class="btn btn-primary">
+                        <i class="fas fa-shopping-bag"></i> Continue Shopping
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

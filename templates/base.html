@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#27AE60">
+    <title>{% block title %}Green Harvest - Organic Products{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=5">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-wrapper">
+                <a href="{{ url_for('index') }}" class="logo">
+                    <i class="fas fa-leaf"></i> Green Harvest
+                </a>
+
+                <div class="search-container">
+                    <form action="{{ url_for('categories') }}" method="GET" class="search-form">
+                        <input type="text" name="search" placeholder="Search products..."
+                            value="{{ request.args.get('search', '') }}" class="search-input">
+                        <button type="submit" class="search-btn">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </form>
+                </div>
+
+                <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+
+                <ul class="nav-menu" id="navMenu">
+                    <li><a href="{{ url_for('index') }}">Home</a></li>
+                    <li class="dropdown">
+                        <a href="{{ url_for('categories') }}" class="dropbtn">
+                            Categories
+                        </a>
+                        <div class="dropdown-content">
+                            <a href="{{ url_for('categories') }}">
+                                <i class="fas fa-th"></i> All Products
+                            </a>
+                            {% for cat in all_categories %}
+                            <a href="{{ url_for('categories', category=cat.id) }}">
+                                <i class="fas fa-leaf"></i> {{ cat.name }}
+                            </a>
+                            {% endfor %}
+                        </div>
+                    </li>
+
+                    {% if current_user.is_authenticated %}
+                    <li>
+                        <a href="{{ url_for('wishlist') }}" class="nav-icon wishlist-icon {% if wishlist_count > 0 %}has-items{% endif %}">
+                            <i class="fas fa-heart"></i>
+                            {% if wishlist_count > 0 %}
+                            <span class="cart-badge">{{ wishlist_count }}</span>
+                            {% endif %}
+                        </a>
+                    </li>
+                    {% endif %}
+
+                    <li>
+                        <a href="{{ url_for('cart') }}" class="nav-icon cart-icon {% if cart_count > 0 %}has-items{% endif %}">
+                            <i class="fas fa-shopping-cart"></i>
+                            {% if cart_count > 0 %}
+                            <span class="cart-badge">{{ cart_count }}</span>
+                            {% endif %}
+                        </a>
+                    </li>
+
+                    {% if current_user.is_authenticated %}
+                    <li class="dropdown user-dropdown">
+                        <a href="#" class="dropbtn user-menu-btn">
+                            <div class="user-avatar">
+                                <i class="fas fa-user-circle"></i>
+                            </div>
+                            <span class="user-name">{{ current_user.name.split()[0] }}</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </a>
+                        <div class="dropdown-content user-dropdown-content">
+                            <div class="user-dropdown-header">
+                                <i class="fas fa-user-circle"></i>
+                                <div>
+                                    <strong>{{ current_user.name }}</strong>
+                                    <p>{{ current_user.email }}</p>
+                                </div>
+                            </div>
+                            <div class="dropdown-divider"></div>
+                            <a href="{{ url_for('account') }}">
+                                <i class="fas fa-user"></i> My Account
+                            </a>
+                            <a href="{{ url_for('account') }}">
+                                <i class="fas fa-shopping-bag"></i> Order History
+                            </a>
+                            <a href="{{ url_for('wishlist') }}">
+                                <i class="fas fa-heart"></i> Wishlist
+                                {% if wishlist_count > 0 %}
+                                <span class="dropdown-badge">{{ wishlist_count }}</span>
+                                {% endif %}
+                            </a>
+                            <a href="{{ url_for('cart') }}">
+                                <i class="fas fa-shopping-cart"></i> Shopping Cart
+                                {% if cart_count > 0 %}
+                                <span class="dropdown-badge">{{ cart_count }}</span>
+                                {% endif %}
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="{{ url_for('categories') }}" class="shop-now-link">
+                                <i class="fas fa-store"></i> Shop Now
+                            </a>
+                            {% if cart_count > 0 %}
+                            <a href="{{ url_for('checkout') }}" class="checkout-link">
+                                <i class="fas fa-credit-card"></i> Checkout & Place Order
+                            </a>
+                            {% endif %}
+                            <div class="dropdown-divider"></div>
+                            <a href="{{ url_for('logout') }}" class="logout-link">
+                                <i class="fas fa-sign-out-alt"></i> Logout
+                            </a>
+                        </div>
+                    </li>
+                    {% else %}
+                    <li><a href="{{ url_for('login') }}" class="btn-login">Login</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+
+            <!-- Mobile Search -->
+            <div class="mobile-search">
+                <form action="{{ url_for('categories') }}" method="GET" class="search-form">
+                    <input type="text" name="search" placeholder="Search products..."
+                        value="{{ request.args.get('search', '') }}" class="search-input">
+                    <button type="submit" class="search-btn">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div class="flash-messages">
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">
+            {{ message }}
+            <button class="close-alert">&times;</button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+
+    <!-- Main Content -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3><i class="fas fa-leaf"></i> Green Harvest</h3>
+                    <p>Your trusted source for 100% organic products. We bring nature's best directly to your doorstep.
+                    </p>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="{{ url_for('index') }}">Home</a></li>
+                        <li><a href="{{ url_for('categories') }}">Categories</a></li>
+                        {% if current_user.is_authenticated %}
+                        <li><a href="{{ url_for('account') }}">My Account</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Customer Service</h4>
+                    <ul>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">Shipping Info</a></li>
+                        <li><a href="#">Returns</a></li>
+                        <li><a href="#">FAQ</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Connect With Us</h4>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-pinterest"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2026 Green Harvest. All rights reserved. | Organic E-Commerce Platform</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/mobile-enhancements.js') }}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+
+</html>

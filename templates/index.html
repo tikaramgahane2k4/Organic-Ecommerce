@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero">
+    <div class="hero-banner">
+        <img src="{{ url_for('static', filename='images/main-banner.png') }}" alt="100% Organic Products">
+        <div class="hero-buttons">
+            <a href="{{ url_for('categories') }}" class="btn btn-primary">Shop Now</a>
+            <a href="#featured-products" class="btn btn-outline">Explore Products</a>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Categories -->
+<section class="section">
+    <div class="container">
+        <div class="section-header">
+            <h2>Shop by Category</h2>
+            <a href="{{ url_for('categories') }}" class="view-all">View All <i class="fas fa-arrow-right"></i></a>
+        </div>
+
+        <div class="categories-grid">
+            {% for category in categories %}
+            <a href="{{ url_for('categories', category=category.id) }}" class="category-card">
+                <div class="category-icon">
+                    {% if category.image %}
+                    <img src="{{ url_for('static', filename='images/' + category.image) }}" alt="{{ category.name }}">
+                    {% else %}
+                    <i class="fas fa-leaf"></i>
+                    {% endif %}
+                </div>
+                <h3>{{ category.name }}</h3>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Promotional Banners -->
+<section class="banners-section">
+    <div class="container">
+        <div class="banners-grid">
+            <a href="{{ url_for('categories') }}" class="banner-card">
+                <img src="{{ url_for('static', filename='images/banner1.png') }}" alt="Fresh Organic Products">
+                <div class="banner-overlay-text">Fresh Organic</div>
+            </a>
+            <a href="{{ url_for('categories') }}" class="banner-card">
+                <img src="{{ url_for('static', filename='images/banner2.png') }}" alt="Fresh Organic Products">
+                <div class="banner-overlay-text">Premium Quality</div>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Products -->
+<section class="section section-gray" id="featured-products">
+    <div class="container">
+        <div class="section-header">
+            <h2>Featured Products</h2>
+            <a href="{{ url_for('categories') }}" class="view-all">View All <i class="fas fa-arrow-right"></i></a>
+        </div>
+
+        <div class="products-grid">
+            {% for product in products %}
+            <div class="product-card">
+                <a href="{{ url_for('product_detail', product_id=product.id) }}">
+                    <div class="product-image">
+                        {% if product.image %}
+                        <img src="{{ url_for('static', filename='images/' + product.image) }}" alt="{{ product.name }}">
+                        {% else %}
+                        <img src="{{ url_for('static', filename='images/placeholder.jpg') }}" alt="{{ product.name }}">
+                        {% endif %}
+                        <span class="badge-organic">Organic</span>
+                    </div>
+                </a>
+
+                <div class="product-info">
+                    <div class="product-header">
+                        <h3><a href="{{ url_for('product_detail', product_id=product.id) }}">{{ product.name }}</a></h3>
+                        <span class="price">₹{{ "%.2f"|format(product.price) }}</span>
+                    </div>
+                    <p class="product-category">{{ product.category.name }}</p>
+                    <div class="product-footer">
+                        <div class="product-actions">
+                            <button class="add-to-wishlist" data-product-id="{{ product.id }}" title="Add to Wishlist">
+                                <i class="far fa-heart"></i>
+                            </button>
+                            <form action="{{ url_for('add_to_cart', product_id=product.id) }}" method="POST"
+                                class="inline-form">
+                                <input type="hidden" name="quantity" value="1">
+                                <input type="hidden" name="redirect_to" value="cart">
+                                <button type="submit" class="btn-add-cart home-add-cart" title="Add to Cart">
+                                    <i class="fas fa-shopping-bag"></i>
+                                    <span>Add to Cart</span>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Why Choose Us -->
+<section class="section">
+    <div class="container">
+        <h2 class="text-center">Why Choose Green Harvest?</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <i class="fas fa-leaf"></i>
+                <h3>100% Organic</h3>
+                <p>All our products are certified organic and pesticide-free</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-truck"></i>
+                <h3>Free Delivery</h3>
+                <p>Free shipping on orders over $50</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-shield-alt"></i>
+                <h3>Secure Payment</h3>
+                <p>100% secure payment processing</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-headset"></i>
+                <h3>24/7 Support</h3>
+                <p>Dedicated customer support team</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}Page Not Found - Green Harvest{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <div class="empty-state" style="min-height: 50vh; display: flex; flex-direction: column; justify-content: center;">
+            <i class="fas fa-exclamation-triangle" style="font-size: 6rem; color: var(--warning);"></i>
+            <h1 style="font-size: 3rem; margin: 1rem 0;">404</h1>
+            <h3>Page Not Found</h3>
+            <p>Sorry, the page you're looking for doesn't exist.</p>
+            <div style="margin-top: 2rem;">
+                <a href="{{ url_for('index') }}" class="btn btn-primary">Go to Home</a>
+                <a href="{{ url_for('categories') }}" class="btn btn-outline">Browse Products</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
