@@ -1,11 +1,5 @@
 // ==================== ADVANCED MOBILE ENHANCEMENTS ====================
 
-/**
- * This file adds advanced mobile and touch features to enhance the user experience
- * Features include: swipe navigation, gesture support, improved touch feedback, 
- * and advanced mobile optimizations
- */
-
 // ==================== SWIPE DETECTION ====================
 class SwipeDetector {
     constructor(element, callbacks = {}) {
@@ -82,10 +76,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // ==================== PASSIVE EVENT LISTENERS ====================
-/**
- * Improves scroll performance by using passive event listeners
- * Tells browser it can optimize scroll performance
- */
+
 document.addEventListener('DOMContentLoaded', function() {
     let lastScrollY = 0;
     
@@ -163,9 +154,7 @@ class DoubleTapDetector {
 }
 
 // ==================== KEYBOARD VIEWPORT FIX ====================
-/**
- * Prevents layout shift when mobile keyboard appears/disappears
- */
+
 document.addEventListener('DOMContentLoaded', function() {
     const inputs = document.querySelectorAll('input, textarea, select');
     
@@ -180,9 +169,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // ==================== ORIENTATION CHANGE HANDLER ====================
-/**
- * Handles layout adjustments when device orientation changes
- */
+
 document.addEventListener('DOMContentLoaded', function() {
     function handleOrientationChange() {
         // Close mobile menu on orientation change
@@ -204,10 +191,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // ==================== HAPTIC FEEDBACK (VIBRATION) ====================
-/**
- * Provides vibration feedback on supported devices
- * Great for button clicks and interactions
- */
+
 class HapticFeedback {
     static trigger(duration = 10) {
         if ('vibrate' in navigator) {
@@ -223,9 +207,7 @@ class HapticFeedback {
 }
 
 // ==================== PREVENT ZOOM ON DOUBLE TAP ====================
-/**
- * On newer devices, prevents accidental zoom while maintaining accessibility
- */
+
 document.addEventListener('DOMContentLoaded', function() {
     let lastTouchEnd = 0;
     
@@ -271,12 +253,8 @@ class MobileDetect {
 }
 
 // ==================== SAFE AREA DETECTION ====================
-/**
- * Detects safe areas for notched devices (iPhone X+)
- */
+
 document.addEventListener('DOMContentLoaded', function() {
-    // CSS custom properties are already set in mobile-touch.css
-    // This JS just logs for debugging if needed
     
     if (typeof CSS !== 'undefined' && CSS.supports('padding-top: env(safe-area-inset-top)')) {
         console.log('Device has safe area support (notched device)');
@@ -284,9 +262,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // ==================== NETWORK STATUS DETECTION ====================
-/**
- * Detects network connectivity and type
- */
+
 class NetworkStatus {
     static isOnline() {
         return navigator.onLine;
@@ -327,9 +303,7 @@ class NetworkStatus {
 }
 
 // ==================== PERFORMANCE MONITORING ====================
-/**
- * Monitors and logs performance metrics for mobile optimization
- */
+
 class PerformanceMonitor {
     static logMetrics() {
         if (performance && performance.timing) {
