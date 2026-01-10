@@ -600,4 +600,7 @@ if __name__ == '__main__':
     with app.app_context():
         db.create_all()
         seed_if_empty()
-    app.run(debug=True)
+    import os
+    debug = os.environ.get('FLASK_DEBUG', 'False').lower() == 'true'
+    port = int(os.environ.get('PORT', 5000))
+    app.run(debug=debug, host='0.0.0.0', port=port)
