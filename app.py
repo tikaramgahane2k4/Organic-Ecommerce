@@ -23,7 +23,6 @@ login_manager.login_message = 'Please login to access this page.'
 # Create all database tables on app startup
 with app.app_context():
     db.create_all()
-    seed_if_empty()
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -105,6 +104,10 @@ def seed_if_empty():
 
 
 # ==================== HOME PAGE ====================
+# Ensure baseline data exists on import (gunicorn)
+with app.app_context():
+    seed_if_empty()
+
 @app.route('/')
 def index():
     """Home page with featured products and categories"""
