@@ -37,10 +37,10 @@
                             class="filter-option {% if not current_category %}active{% endif %}">
                             <span>All Products</span>
                         </a>
-                        {% for category in categories %}
+                        {% for category, product_count in categories %}
                         <a href="{{ url_for('categories', category=category.id) }}"
                             class="filter-option {% if current_category and current_category.id == category.id %}active{% endif %}">
-                            <span>{{ category.name }}</span>
+                            <span>{{ category.name }} ({{ product_count }})</span>
                         </a>
                         {% endfor %}
                     </div>
@@ -89,6 +89,10 @@
                             <div class="product-image">
                                 {% if product.image %}
                                 <img src="{{ url_for('static', filename='images/' + product.image) }}"
+                                    alt="{{ product.name }}"
+                                    onerror="this.src='{{ product.image_url if product.image_url else url_for('static', filename='images/placeholder.jpg') }}'">
+                                {% elif product.image_url %}
+                                <img src="{{ product.image_url }}"
                                     alt="{{ product.name }}">
                                 {% else %}
                                 <img src="{{ url_for('static', filename='images/placeholder.jpg') }}"
@@ -106,6 +110,7 @@
                             </div>
                             <p class="product-category">{{ product.category.name }}</p>
                             <div class="product-footer">
+                                {% if not current_user.is_admin %}
                                 <div class="product-actions">
                                     <button class="btn-icon add-to-wishlist" data-product-id="{{ product.id }}"
                                         title="Add to Wishlist">
@@ -129,6 +134,7 @@
                                         {% endif %}
                                     </div>
                                 </div>
+                                {% endif %}
                             </div>
                         </div>
                     </div>

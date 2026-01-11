@@ -1,0 +1,383 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Product - Admin{% endblock %}
+
+{% block content %}
+<section class="section admin-section">
+    <div class="container">
+        <div class="page-header">
+            <h1><i class="fas fa-edit"></i> Edit Product</h1>
+            <p>Update product details</p>
+        </div>
+
+        <div class="form-container">
+            <form method="POST" class="admin-form">
+                {{ form.hidden_tag() }}
+
+                <div class="form-group">
+                    <label for="name">{{ form.name.label }}</label>
+                    {{ form.name(class="form-control") }}
+                    {% if form.name.errors %}
+                    <div class="error-message">
+                        {% for error in form.name.errors %}
+                        <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="description">{{ form.description.label }}</label>
+                    {{ form.description(class="form-control", rows=5) }}
+                    {% if form.description.errors %}
+                    <div class="error-message">
+                        {% for error in form.description.errors %}
+                        <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="price">{{ form.price.label }}</label>
+                        {{ form.price(class="form-control", step="0.01") }}
+                        {% if form.price.errors %}
+                        <div class="error-message">
+                            {% for error in form.price.errors %}
+                            <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="stock">{{ form.stock.label }}</label>
+                        {{ form.stock(class="form-control") }}
+                        {% if form.stock.errors %}
+                        <div class="error-message">
+                            {% for error in form.stock.errors %}
+                            <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="category_id">{{ form.category_id.label }}</label>
+                    {{ form.category_id(class="form-control") }}
+                    {% if form.category_id.errors %}
+                    <div class="error-message">
+                        {% for error in form.category_id.errors %}
+                        <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Image Source Selection -->
+                <div class="form-group">
+                    <label>{{ form.image_source.label }}</label>
+                    <div class="radio-group">
+                        {% for subfield in form.image_source %}
+                        <div class="radio-option">
+                            {{ subfield(class="radio-input", onchange="toggleImageSource()") }}
+                            <label for="{{ subfield.id }}" class="radio-label">
+                                {{ subfield.label.text }}
+                            </label>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Local Image File -->
+                <div class="form-group" id="file-group">
+                    <label for="image">Image Filename</label>
+                    {{ form.image(class="form-control", placeholder="e.g., tomato.jpg") }}
+                    <small class="form-help">Enter the image filename (must be in static/images/ folder)</small>
+                    {% if form.image.errors %}
+                    <div class="error-message">
+                        {% for error in form.image.errors %}
+                        <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Image URL -->
+                <div class="form-group" id="url-group">
+                    <label for="image_url">Image URL</label>
+                    {{ form.image_url(class="form-control", placeholder="e.g., https://example.com/image.jpg") }}
+                    <small class="form-help">Enter full image URL (http:// or https://)</small>
+                    {% if form.image_url.errors %}
+                    <div class="error-message">
+                        {% for error in form.image_url.errors %}
+                        <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Current Image Preview -->
+                <div class="form-group">
+                    <label>Image Preview:</label>
+                    <div class="image-preview-container" id="image-preview">
+                        {% if product.image %}
+                        <img src="{{ url_for('static', filename='images/' + product.image) }}" 
+                             alt="{{ product.name }}" 
+                               onerror='this.outerHTML="<p class=&quot;no-image&quot;>Image file not found</p>"'>
+                        {% elif product.image_url %}
+                        <img src="{{ product.image_url }}" 
+                             alt="{{ product.name }}">
+                        {% else %}
+                        <p class="no-image">No image available</p>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Update Product
+                    </button>
+                    <a href="{{ url_for('admin_products') }}" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<style>
+.admin-section {
+    padding: 40px 0;
+    background: #f8f9fa;
+    min-height: calc(100vh - 200px);
+}
+
+.form-container {
+    max-width: 800px;
+    margin: 30px auto;
+    background: white;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.admin-form {
+    width: 100%;
+}
+
+.form-group {
+    margin-bottom: 25px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.form-control {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 15px;
+    transition: border-color 0.3s;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: #27AE60;
+}
+
+.form-control select {
+    cursor: pointer;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.form-help {
+    display: block;
+    margin-top: 5px;
+    color: #7f8c8d;
+    font-size: 13px;
+}
+
+.error-message {
+    color: #e74c3c;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+.radio-group {
+    display: flex;
+    gap: 20px;
+    margin-top: 10px;
+}
+
+.radio-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.radio-input {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+.radio-label {
+    cursor: pointer;
+    font-weight: 500;
+    margin: 0;
+}
+
+.image-preview-container {
+    border: 2px dashed #ccc;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    background: #f8f9fa;
+    min-height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.image-preview-container img {
+    max-width: 100%;
+    max-height: 300px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.no-image {
+    color: #7f8c8d;
+    font-size: 14px;
+    margin: 0;
+}
+
+.form-actions {
+    display: flex;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.btn {
+    padding: 12px 30px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s;
+}
+
+.btn-primary {
+    background: #27AE60;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #229954;
+}
+
+.btn-secondary {
+    background: #95a5a6;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: #7f8c8d;
+}
+
+@media (max-width: 768px) {
+    .form-container {
+        padding: 20px;
+    }
+    
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .btn {
+        width: 100%;
+    }
+    
+    .radio-group {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+</style>
+
+<script>
+function toggleImageSource() {
+    const source = document.querySelector('input[name="image_source"]:checked').value;
+    const fileGroup = document.getElementById('file-group');
+    const urlGroup = document.getElementById('url-group');
+    
+    if (source === 'file') {
+        fileGroup.style.display = 'block';
+        urlGroup.style.display = 'none';
+        document.getElementById('image').focus();
+    } else {
+        fileGroup.style.display = 'none';
+        urlGroup.style.display = 'block';
+        document.getElementById('image_url').focus();
+    }
+    
+    // Reset preview when source changes
+    updatePreview();
+}
+
+function updatePreview() {
+    const source = document.querySelector('input[name="image_source"]:checked').value;
+    const previewContainer = document.getElementById('image-preview');
+    const baseImagePath = '{{ url_for("static", filename="images/") }}';
+    
+    if (source === 'file') {
+        const filename = document.getElementById('image').value;
+        if (filename) {
+            const imagePath = baseImagePath + filename;
+            previewContainer.innerHTML = '<img src="' + imagePath + '" alt="Preview" onerror="this.outerHTML=\'<p class=&quot;no-image&quot;>Image file not found</p>\'">';
+        } else {
+            previewContainer.innerHTML = '<p class="no-image">No image selected</p>';
+        }
+    } else {
+        const imageUrl = document.getElementById('image_url').value;
+        if (imageUrl) {
+            previewContainer.innerHTML = '<img src="' + imageUrl + '" alt="Preview" onerror="this.outerHTML=\'<p class=&quot;no-image&quot;>Image URL not accessible</p>\'">';
+        } else {
+            previewContainer.innerHTML = '<p class="no-image">No URL provided</p>';
+        }
+    }
+}
+
+// Event listeners for preview updates
+document.addEventListener('DOMContentLoaded', function() {
+    const imageInput = document.getElementById('image');
+    const imageUrlInput = document.getElementById('image_url');
+    
+    if (imageInput) {
+        imageInput.addEventListener('input', updatePreview);
+    }
+    if (imageUrlInput) {
+        imageUrlInput.addEventListener('input', updatePreview);
+    }
+});
+</script>
+{% endblock %}

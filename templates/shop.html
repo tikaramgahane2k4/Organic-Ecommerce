@@ -38,11 +38,10 @@
             <div class="product-card">
                 <a href="{{ url_for('product_detail', product_id=product.id) }}">
                     <div class="product-image">
-                        {% if product.image %}
-                        <img src="{{ url_for('static', filename='images/' + product.image) }}" alt="{{ product.name }}">
-                        {% else %}
-                        <img src="{{ url_for('static', filename='images/placeholder.jpg') }}" alt="{{ product.name }}">
-                        {% endif %}
+                            {% set fallback_image = product.image_url or url_for('static', filename='images/placeholder.jpg') %}
+                            <img src="{{ url_for('static', filename='images/' + product.image) if product.image else fallback_image }}" 
+                                alt="{{ product.name }}"
+                                onerror="this.onerror=null; this.src='{{ fallback_image }}';">
                         <span class="badge-organic">Organic</span>
                     </div>
                 </a>

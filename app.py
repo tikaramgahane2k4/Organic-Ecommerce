@@ -1,17 +1,13 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
+from flask import Flask, render_template, request, redirect, url_for, flash, jsonify, abort
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from config import Config
 from models import db, User, Category, Product, Wishlist, Cart, Order, OrderItem
-from forms import RegistrationForm, LoginForm, CheckoutForm
+from forms import RegistrationForm, LoginForm, CheckoutForm, ProductForm
 from sqlalchemy import func
+from functools import wraps
 
-app = Flask(__name__, instance_relative_config=True)
+app = Flask(__name__)
 app.config.from_object(Config)
-# Override with instance config if it exists
-try:
-    app.config.from_pyfile('config.py')
-except FileNotFoundError:
-    pass
 
 # Initialize extensions
 db.init_app(app)
@@ -28,6 +24,21 @@ with app.app_context():
 def load_user(user_id):
     """Load user by ID for Flask-Login"""
     return User.query.get(int(user_id))
+
+
+# ==================== ADMIN DECORATOR ====================
+def admin_required(f):
+    """Decorator to require admin access"""
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not current_user.is_authenticated:
+            flash('Please login to access this page.', 'warning')
+            return redirect(url_for('login', next=request.url))
+        if not current_user.is_admin:
+            flash('You do not have permission to access this page.', 'danger')
+            return redirect(url_for('index'))
+        return f(*args, **kwargs)
+    return decorated_function
 
 
 # ==================== DATA SEED (SAFETY) ====================
@@ -103,10 +114,31 @@ def seed_if_empty():
     db.session.commit()
 
 
+def create_default_admin():
+    """Create default admin user if not exists"""
+    # Default admin credentials
+    ADMIN_EMAIL = "admin@greenharvest.com"
+    ADMIN_PASSWORD = "admin123"
+    ADMIN_NAME = "Admin User"
+    
+    admin = User.query.filter_by(email=ADMIN_EMAIL).first()
+    if not admin:
+        admin = User(name=ADMIN_NAME, email=ADMIN_EMAIL, is_admin=True)
+        admin.set_password(ADMIN_PASSWORD)
+        db.session.add(admin)
+        db.session.commit()
+        print(f"✓ Default admin created: {ADMIN_EMAIL} / {ADMIN_PASSWORD}")
+    elif not admin.is_admin:
+        admin.is_admin = True
+        db.session.commit()
+        print(f"✓ User {ADMIN_EMAIL} promoted to admin")
+
+
 # ==================== HOME PAGE ====================
 # Ensure baseline data exists on import (gunicorn)
 with app.app_context():
     seed_if_empty()
+    create_default_admin()
 
 @app.route('/')
 def index():
@@ -126,7 +158,13 @@ def categories():
     price_min = request.args.get('price_min', type=float)
     price_max = request.args.get('price_max', type=float)
     
-    all_categories = Category.query.all()
+    # Get all categories with product counts
+    all_categories_query = db.session.query(
+        Category,
+        func.count(Product.id).label('product_count')
+    ).outerjoin(Product).group_by(Category.id).all()
+    
+    all_categories = [(cat, count) for cat, count in all_categories_query]
     
     # Build query
     query = Product.query
@@ -256,6 +294,12 @@ def register():
     form = RegistrationForm()
     
     if form.validate_on_submit():
+        # Check if user with this email already exists
+        existing_user = User.query.filter_by(email=form.email.data).first()
+        if existing_user:
+            flash('Email address already registered. Please use a different email or login.', 'danger')
+            return render_template('register.html', form=form)
+        
         user = User(name=form.name.data, email=form.email.data)
         user.set_password(form.password.data)
         db.session.add(user)
@@ -561,7 +605,6 @@ def order_detail(order_id):
     """View detailed order information"""
     order = Order.query.filter_by(id=order_id, user_id=current_user.id).first_or_404()
     return render_template('order_detail.html', order=order)
-
 @app.route('/order/<int:order_id>/cancel', methods=['POST'])
 @login_required
 def cancel_order(order_id):
@@ -576,6 +619,164 @@ def cancel_order(order_id):
     db.session.commit()
     flash('Your order has been cancelled.', 'success')
     return redirect(request.referrer or url_for('account'))
+
+
+# ==================== ADMIN PANEL ====================
+@app.route('/admin')
+@admin_required
+def admin_dashboard():
+    """Admin dashboard with statistics and product management"""
+    total_products = Product.query.count()
+    total_categories = Category.query.count()
+    total_orders = Order.query.count()
+    # Count only non-admin users (registered customers)
+    total_users = User.query.filter_by(is_admin=False).count()
+    
+    # Get category-wise product counts
+    category_stats = db.session.query(
+        Category.name, 
+        func.count(Product.id).label('product_count')
+    ).outerjoin(Product).group_by(Category.id, Category.name).all()
+    
+    # Recent products
+    recent_products = Product.query.order_by(Product.created_at.desc()).limit(10).all()
+    
+    # Get all registered users (excluding admins) with their order counts
+    users = db.session.query(
+        User,
+        func.count(Order.id).label('order_count')
+    ).outerjoin(Order).filter(User.is_admin == False).group_by(User.id).order_by(User.created_at.desc()).all()
+    
+    return render_template('admin_dashboard.html',
+                         total_products=total_products,
+                         total_categories=total_categories,
+                         total_orders=total_orders,
+                         total_users=total_users,
+                         category_stats=category_stats,
+                         recent_products=recent_products,
+                         users=users,
+                         hide_shopping_nav=True)
+
+
+@app.route('/admin/products')
+@admin_required
+def admin_products():
+    """List all products for admin management"""
+    products = Product.query.order_by(Product.created_at.desc()).all()
+    return render_template('admin_products.html', products=products, hide_shopping_nav=True)
+
+
+@app.route('/admin/product/add', methods=['GET', 'POST'])
+@admin_required
+def admin_add_product():
+    """Add new product"""
+    form = ProductForm()
+    
+    # Populate category choices
+    form.category_id.choices = [(c.id, c.name) for c in Category.query.order_by(Category.name).all()]
+    
+    if form.validate_on_submit():
+        # Handle image source type
+        image_filename = None
+        image_url = None
+        
+        if form.image_source.data == 'file':
+            if not form.image.data:
+                flash('Please enter image filename', 'danger')
+                return render_template('admin_add_product.html', form=form, hide_shopping_nav=True)
+            image_filename = form.image.data
+        else:  # url
+            if not form.image_url.data:
+                flash('Please enter image URL', 'danger')
+                return render_template('admin_add_product.html', form=form, hide_shopping_nav=True)
+            image_url = form.image_url.data
+        
+        product = Product(
+            name=form.name.data,
+            description=form.description.data,
+            price=form.price.data,
+            stock=form.stock.data,
+            category_id=form.category_id.data,
+            image=image_filename,
+            image_url=image_url
+        )
+        db.session.add(product)
+        db.session.commit()
+        flash(f'Product "{product.name}" added successfully!', 'success')
+        return redirect(url_for('admin_products'))
+    
+    return render_template('admin_add_product.html', form=form, hide_shopping_nav=True)
+
+
+@app.route('/admin/product/<int:product_id>/edit', methods=['GET', 'POST'])
+@admin_required
+def admin_edit_product(product_id):
+    """Edit existing product"""
+    product = Product.query.get_or_404(product_id)
+    form = ProductForm(obj=product)
+    
+    # Populate category choices
+    form.category_id.choices = [(c.id, c.name) for c in Category.query.order_by(Category.name).all()]
+    
+    if form.validate_on_submit():
+        product.name = form.name.data
+        product.description = form.description.data
+        product.price = form.price.data
+        product.stock = form.stock.data
+        product.category_id = form.category_id.data
+        
+        # Handle image source type
+        if form.image_source.data == 'file':
+            if not form.image.data:
+                flash('Please enter image filename', 'danger')
+                return render_template('admin_edit_product.html', form=form, product=product, hide_shopping_nav=True)
+            product.image = form.image.data
+            product.image_url = None
+        else:  # url
+            if not form.image_url.data:
+                flash('Please enter image URL', 'danger')
+                return render_template('admin_edit_product.html', form=form, product=product, hide_shopping_nav=True)
+            product.image = None
+            product.image_url = form.image_url.data
+        
+        db.session.commit()
+        flash(f'Product "{product.name}" updated successfully!', 'success')
+        return redirect(url_for('admin_products'))
+    
+    return render_template('admin_edit_product.html', form=form, product=product, hide_shopping_nav=True)
+
+
+@app.route('/admin/product/<int:product_id>/delete', methods=['POST'])
+@admin_required
+def admin_delete_product(product_id):
+    """Delete a product"""
+    product = Product.query.get_or_404(product_id)
+    product_name = product.name
+    db.session.delete(product)
+    db.session.commit()
+    flash(f'Product "{product_name}" deleted successfully!', 'success')
+    return redirect(url_for('admin_products'))
+
+
+@app.route('/admin/categories')
+@admin_required
+def admin_categories():
+    """List all categories with product counts"""
+    category_stats = db.session.query(
+        Category,
+        func.count(Product.id).label('product_count')
+    ).outerjoin(Product).group_by(Category.id).all()
+    
+    return render_template('admin_categories.html', category_stats=category_stats, hide_shopping_nav=True)
+
+
+@app.route('/admin/user/<int:user_id>/orders')
+@admin_required
+def admin_user_orders(user_id):
+    """View a specific user's order history"""
+    user = User.query.get_or_404(user_id)
+    orders = Order.query.filter_by(user_id=user_id).order_by(Order.created_at.desc()).all()
+    return render_template('admin_user_orders.html', user=user, orders=orders, hide_shopping_nav=True)
 
 # ==================== ERROR HANDLERS ====================
 @app.errorhandler(404)
@@ -601,7 +802,7 @@ def inject_cart_count():
     if current_user.is_authenticated:
         cart_count = db.session.query(func.sum(Cart.quantity)).filter_by(user_id=current_user.id).scalar() or 0
         wishlist_count = db.session.query(func.count(Wishlist.id)).filter_by(user_id=current_user.id).scalar() or 0
-    return dict(cart_count=cart_count, wishlist_count=wishlist_count, all_categories=all_categories)
+    return dict(cart_count=cart_count, wishlist_count=wishlist_count, all_categories=all_categories, hide_shopping_nav=False)
 
 
 if __name__ == '__main__':

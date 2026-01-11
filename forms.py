@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, TextAreaField, IntegerField
+from wtforms import StringField, PasswordField, SubmitField, TextAreaField, IntegerField, FloatField, SelectField, RadioField
 from wtforms.validators import DataRequired, Email, EqualTo, ValidationError, Length, NumberRange
 from models import User
 
@@ -69,3 +69,35 @@ class CheckoutForm(FlaskForm):
         Length(min=2, max=100)
     ])
     submit = SubmitField('Place Order')
+
+
+class ProductForm(FlaskForm):
+    """Form for adding/editing products"""
+    name = StringField('Product Name', validators=[
+        DataRequired(message='Product name is required'),
+        Length(min=2, max=200, message='Product name must be between 2 and 200 characters')
+    ])
+    description = TextAreaField('Description', validators=[
+        DataRequired(message='Description is required'),
+        Length(min=10, max=1000, message='Description must be between 10 and 1000 characters')
+    ])
+    price = FloatField('Price (₹)', validators=[
+        DataRequired(message='Price is required'),
+        NumberRange(min=0.01, message='Price must be greater than 0')
+    ])
+    stock = IntegerField('Stock Quantity', validators=[
+        DataRequired(message='Stock quantity is required'),
+        NumberRange(min=0, message='Stock cannot be negative')
+    ])
+    category_id = SelectField('Category', coerce=int, validators=[
+        DataRequired(message='Please select a category')
+    ])
+    image_source = RadioField('Image Source', choices=[('file', 'Upload Local File'), ('url', 'Use Image Link')], default='file')
+    image = StringField('Image Filename', validators=[
+        Length(max=255, message='Filename must be less than 255 characters')
+    ])
+    image_url = StringField('Image URL', validators=[
+        Length(max=500, message='URL must be less than 500 characters')
+    ])
+    submit = SubmitField('Add Product')
+

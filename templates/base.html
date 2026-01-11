@@ -37,6 +37,7 @@
 
                 <ul class="nav-menu" id="navMenu">
                     <li><a href="{{ url_for('index') }}">Home</a></li>
+                    {% if not current_user.is_admin %}
                     <li class="dropdown">
                         <a href="{{ url_for('categories') }}" class="dropbtn">
                             Categories
@@ -52,8 +53,9 @@
                             {% endfor %}
                         </div>
                     </li>
+                    {% endif %}
 
-                    {% if current_user.is_authenticated %}
+                    {% if current_user.is_authenticated and not current_user.is_admin %}
                     <li>
                         <a href="{{ url_for('wishlist') }}" class="nav-icon wishlist-icon {% if wishlist_count > 0 %}has-items{% endif %}">
                             <i class="fas fa-heart"></i>
@@ -64,6 +66,7 @@
                     </li>
                     {% endif %}
 
+                    {% if not current_user.is_admin %}
                     <li>
                         <a href="{{ url_for('cart') }}" class="nav-icon cart-icon {% if cart_count > 0 %}has-items{% endif %}">
                             <i class="fas fa-shopping-cart"></i>
@@ -72,6 +75,7 @@
                             {% endif %}
                         </a>
                     </li>
+                    {% endif %}
 
                     {% if current_user.is_authenticated %}
                     <li class="dropdown user-dropdown">
@@ -91,6 +95,12 @@
                                 </div>
                             </div>
                             <div class="dropdown-divider"></div>
+                            {% if current_user.is_admin %}
+                            <a href="{{ url_for('admin_dashboard') }}" class="admin-link">
+                                <i class="fas fa-shield-alt"></i> Admin Panel
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            {% else %}
                             <a href="{{ url_for('account') }}">
                                 <i class="fas fa-user"></i> My Account
                             </a>
@@ -119,6 +129,7 @@
                             </a>
                             {% endif %}
                             <div class="dropdown-divider"></div>
+                            {% endif %}
                             <a href="{{ url_for('logout') }}" class="logout-link">
                                 <i class="fas fa-sign-out-alt"></i> Logout
                             </a>

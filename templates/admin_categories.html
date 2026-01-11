@@ -1,0 +1,185 @@
+{% extends "base.html" %}
+
+{% block title %}Categories - Admin{% endblock %}
+
+{% block content %}
+<section class="section admin-section">
+    <div class="container">
+        <div class="page-header">
+            <h1><i class="fas fa-list"></i> Category Management</h1>
+            <p>View all categories and their product counts</p>
+        </div>
+
+        <div class="admin-actions">
+            <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+        </div>
+
+        <div class="admin-panel">
+            <div class="categories-grid">
+                {% for category, product_count in category_stats %}
+                <div class="category-card">
+                    <div class="category-image">
+                        {% if category.image %}
+                        <img src="{{ url_for('static', filename='images/' + category.image) }}" 
+                             alt="{{ category.name }}">
+                        {% else %}
+                        <div class="placeholder-icon">
+                            <i class="fas fa-folder"></i>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="category-info">
+                        <h3>{{ category.name }}</h3>
+                        <p>{{ category.description }}</p>
+                        <div class="category-stats">
+                            <span class="stat-badge">
+                                <i class="fas fa-box"></i> {{ product_count }} Products
+                            </span>
+                        </div>
+                        <div class="category-actions">
+                            <a href="{{ url_for('categories', category=category.id) }}" 
+                               class="btn btn-view">
+                                <i class="fas fa-eye"></i> View Products
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+.admin-section {
+    padding: 40px 0;
+    background: #f8f9fa;
+    min-height: calc(100vh - 200px);
+}
+
+.admin-actions {
+    margin: 30px 0;
+}
+
+.admin-panel {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.categories-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 25px;
+}
+
+.category-card {
+    background: white;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: all 0.3s;
+}
+
+.category-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+.category-image {
+    height: 180px;
+    overflow: hidden;
+    background: linear-gradient(135deg, #27AE60, #229954);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.category-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.placeholder-icon {
+    font-size: 60px;
+    color: white;
+}
+
+.category-info {
+    padding: 20px;
+}
+
+.category-info h3 {
+    margin: 0 0 10px;
+    color: #2c3e50;
+    font-size: 20px;
+}
+
+.category-info p {
+    color: #7f8c8d;
+    font-size: 14px;
+    margin: 0 0 15px;
+    line-height: 1.5;
+}
+
+.category-stats {
+    margin: 15px 0;
+}
+
+.stat-badge {
+    display: inline-block;
+    background: #e3f2fd;
+    color: #1976d2;
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.category-actions {
+    margin-top: 15px;
+}
+
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s;
+}
+
+.btn-view {
+    background: #17a2b8;
+    color: white;
+    width: 100%;
+    text-align: center;
+}
+
+.btn-view:hover {
+    background: #138496;
+}
+
+.btn-secondary {
+    background: #95a5a6;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: #7f8c8d;
+}
+
+@media (max-width: 768px) {
+    .categories-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+{% endblock %}

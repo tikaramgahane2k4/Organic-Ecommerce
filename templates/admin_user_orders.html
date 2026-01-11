@@ -1,0 +1,362 @@
+{% extends "base.html" %}
+
+{% block title %}User Orders - {{ user.name }} - Admin{% endblock %}
+
+{% block content %}
+<section class="section admin-section">
+    <div class="container">
+        <div class="page-header">
+            <h1><i class="fas fa-shopping-bag"></i> Order History - {{ user.name }}</h1>
+            <p>View all orders placed by this user</p>
+        </div>
+
+        <!-- User Info Card -->
+        <div class="user-info-card">
+            <div class="user-details">
+                <div class="user-icon">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+                <div>
+                    <h3>{{ user.name }}</h3>
+                    <p><i class="fas fa-envelope"></i> {{ user.email }}</p>
+                    <p><i class="fas fa-calendar"></i> Member since {{ user.created_at.strftime('%d %b, %Y') }}</p>
+                </div>
+            </div>
+            <div class="user-stats">
+                <div class="stat-item">
+                    <h4>{{ orders|length }}</h4>
+                    <p>Total Orders</p>
+                </div>
+                <div class="stat-item">
+                    <h4>₹{{ orders|sum(attribute='total_amount')|default(0, true) }}</h4>
+                    <p>Total Spent</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Back Button -->
+        <div class="admin-actions" style="margin-bottom: 2rem;">
+            <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+        </div>
+
+        <!-- Orders List -->
+        <div class="admin-panel">
+            <h2><i class="fas fa-list"></i> All Orders</h2>
+            
+            {% if orders %}
+            <div class="orders-list">
+                {% for order in orders %}
+                <div class="order-card-admin">
+                    <div class="order-header-admin">
+                        <div>
+                            <h3>Order #{{ order.id }}</h3>
+                            <p class="order-date">{{ order.created_at.strftime('%d %B, %Y at %I:%M %p') }}</p>
+                        </div>
+                        <div class="order-status-badge">
+                            <span class="badge badge-{{ order.status }}">{{ order.status|title }}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="order-items-admin">
+                        {% for item in order.order_items %}
+                        <div class="order-item-admin">
+                            <div class="item-details">
+                                <strong>{{ item.product.name }}</strong>
+                                <p>Quantity: {{ item.quantity }} × ₹{{ "%.2f"|format(item.price) }}</p>
+                            </div>
+                            <div class="item-total">
+                                ₹{{ "%.2f"|format(item.quantity * item.price) }}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    
+                    <div class="order-footer-admin">
+                        <div class="order-total">
+                            <strong>Total Amount:</strong>
+                            <span class="amount">₹{{ "%.2f"|format(order.total_amount) }}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="order-shipping-info">
+                        <h4><i class="fas fa-shipping-fast"></i> Shipping Information</h4>
+                        <p><strong>Name:</strong> {{ order.shipping_name }}</p>
+                        <p><strong>Email:</strong> {{ order.shipping_email }}</p>
+                        <p><strong>Address:</strong> {{ order.shipping_address }}, {{ order.shipping_city }}</p>
+                        <p><strong>Postal Code:</strong> {{ order.shipping_postal_code }}</p>
+                        <p><strong>Country:</strong> {{ order.shipping_country }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <i class="fas fa-shopping-bag"></i>
+                <h3>No Orders Yet</h3>
+                <p>This user hasn't placed any orders.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<style>
+.admin-section {
+    padding: 40px 0;
+    background: #f8f9fa;
+    min-height: calc(100vh - 200px);
+}
+
+.user-info-card {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    margin-bottom: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+}
+
+.user-details {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.user-icon {
+    font-size: 4rem;
+    color: var(--primary-color);
+}
+
+.user-details h3 {
+    margin-bottom: 0.5rem;
+    color: var(--text-dark);
+}
+
+.user-details p {
+    margin: 0.25rem 0;
+    color: var(--text-light);
+}
+
+.user-details i {
+    margin-right: 0.5rem;
+    color: var(--primary-color);
+}
+
+.user-stats {
+    display: flex;
+    gap: 2rem;
+}
+
+.stat-item {
+    text-align: center;
+    padding: 1rem 2rem;
+    background: var(--background-gray);
+    border-radius: 8px;
+}
+
+.stat-item h4 {
+    font-size: 1.8rem;
+    color: var(--primary-color);
+    margin-bottom: 0.25rem;
+}
+
+.stat-item p {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.admin-panel {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+}
+
+.admin-panel h2 {
+    margin-bottom: 1.5rem;
+    color: var(--text-dark);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.orders-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.order-card-admin {
+    border: 2px solid var(--border-color);
+    border-radius: 10px;
+    padding: 1.5rem;
+    background: var(--background);
+}
+
+.order-header-admin {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.order-header-admin h3 {
+    margin-bottom: 0.25rem;
+    color: var(--text-dark);
+}
+
+.order-date {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.badge {
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.badge-pending {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.badge-processing {
+    background: #cfe2ff;
+    color: #084298;
+}
+
+.badge-shipped {
+    background: #d1ecf1;
+    color: #0c5460;
+}
+
+.badge-delivered {
+    background: #d4edda;
+    color: #155724;
+}
+
+.badge-cancelled {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.order-items-admin {
+    margin-bottom: 1.5rem;
+}
+
+.order-item-admin {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--background-gray);
+}
+
+.order-item-admin:last-child {
+    border-bottom: none;
+}
+
+.item-details strong {
+    color: var(--text-dark);
+}
+
+.item-details p {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-top: 0.25rem;
+}
+
+.item-total {
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.order-footer-admin {
+    padding-top: 1rem;
+    border-top: 2px solid var(--border-color);
+    margin-bottom: 1rem;
+}
+
+.order-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.1rem;
+}
+
+.order-total .amount {
+    color: var(--primary-color);
+    font-size: 1.3rem;
+    font-weight: 700;
+}
+
+.order-shipping-info {
+    background: var(--background-gray);
+    padding: 1rem;
+    border-radius: 8px;
+    margin-top: 1rem;
+}
+
+.order-shipping-info h4 {
+    margin-bottom: 0.75rem;
+    color: var(--text-dark);
+}
+
+.order-shipping-info p {
+    margin: 0.25rem 0;
+    color: var(--text-light);
+}
+
+.empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+}
+
+.empty-state i {
+    font-size: 5rem;
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+}
+
+.empty-state h3 {
+    margin-bottom: 0.5rem;
+    color: var(--text-dark);
+}
+
+.empty-state p {
+    color: var(--text-light);
+}
+
+@media (max-width: 768px) {
+    .user-info-card {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .user-stats {
+        width: 100%;
+        justify-content: space-around;
+    }
+    
+    .order-header-admin {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .order-total {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+}
+</style>
+{% endblock %}
