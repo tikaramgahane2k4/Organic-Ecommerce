@@ -1,0 +1,180 @@
+{% extends "base.html" %}
+
+{% block title %}About Us - Green Harvest{% endblock %}
+
+{% block content %}
+<!-- Breadcrumbs -->
+<div class="breadcrumbs">
+    <div class="container">
+        <a href="{{ url_for('index') }}">Home</a>
+        <i class="fas fa-chevron-right"></i>
+        <span>About Us</span>
+    </div>
+</div>
+
+<section class="section about-section">
+    <div class="container">
+        <div class="page-header text-center">
+            <h1><i class="fas fa-leaf"></i> About Green Harvest</h1>
+            <p class="lead">Your trusted partner for 100% organic products</p>
+        </div>
+
+        <!-- Our Story -->
+        <div class="about-content">
+            <div class="about-block">
+                <div class="about-image">
+                    <img src="{{ url_for('static', filename='images/main-banner.png') }}" alt="Green Harvest Farm" class="rounded-image">
+                </div>
+                <div class="about-text">
+                    <h2><i class="fas fa-book-open"></i> Our Story</h2>
+                    <p>Green Harvest was born from a simple belief: everyone deserves access to pure, organic food. Founded in 2020, we started as a small family farm committed to sustainable agriculture and healthy living.</p>
+                    <p>Today, we've grown into a trusted online marketplace connecting organic farmers directly with health-conscious consumers. Every product on our platform is carefully vetted to ensure it meets our strict organic standards.</p>
+                </div>
+            </div>
+
+            <!-- Our Mission -->
+            <div class="about-block reverse">
+                <div class="about-text">
+                    <h2><i class="fas fa-bullseye"></i> Our Mission</h2>
+                    <p>To make organic living accessible and affordable for everyone. We believe that choosing organic shouldn't be a luxury—it should be a lifestyle choice available to all.</p>
+                    <p>We work directly with local farmers and organic producers to eliminate middlemen, ensuring you get the freshest products at fair prices while supporting sustainable agriculture.</p>
+                </div>
+                <div class="about-image">
+                    <img src="{{ url_for('static', filename='images/banner1.png') }}" alt="Organic Farming" class="rounded-image">
+                </div>
+            </div>
+
+            <!-- Our Values -->
+            <div class="values-section">
+                <h2 class="text-center"><i class="fas fa-heart"></i> Our Values</h2>
+                <div class="values-grid">
+                    <div class="value-card">
+                        <div class="value-icon">
+                            <i class="fas fa-leaf"></i>
+                        </div>
+                        <h3>100% Organic</h3>
+                        <p>All our products are certified organic with no pesticides, chemicals, or artificial additives.</p>
+                    </div>
+
+                    <div class="value-card">
+                        <div class="value-icon">
+                            <i class="fas fa-seedling"></i>
+                        </div>
+                        <h3>Sustainable</h3>
+                        <p>We support farming practices that protect the environment and promote biodiversity.</p>
+                    </div>
+
+                    <div class="value-card">
+                        <div class="value-icon">
+                            <i class="fas fa-handshake"></i>
+                        </div>
+                        <h3>Fair Trade</h3>
+                        <p>We ensure fair prices for farmers and transparent pricing for customers.</p>
+                    </div>
+
+                    <div class="value-card">
+                        <div class="value-icon">
+                            <i class="fas fa-truck"></i>
+                        </div>
+                        <h3>Fresh Delivery</h3>
+                        <p>Farm-to-table freshness with quick delivery right to your doorstep.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Why Choose Us -->
+            <div class="why-choose-section">
+                <h2 class="text-center"><i class="fas fa-star"></i> Why Choose Green Harvest?</h2>
+                <div class="why-choose-grid">
+                    <div class="why-choose-item">
+                        <i class="fas fa-check-circle"></i>
+                        <div>
+                            <h4>Quality Guaranteed</h4>
+                            <p>Every product is inspected and certified to meet organic standards</p>
+                        </div>
+                    </div>
+
+                    <div class="why-choose-item">
+                        <i class="fas fa-check-circle"></i>
+                        <div>
+                            <h4>Direct from Farmers</h4>
+                            <p>Skip the middleman and support local organic farmers directly</p>
+                        </div>
+                    </div>
+
+                    <div class="why-choose-item">
+                        <i class="fas fa-check-circle"></i>
+                        <div>
+                            <h4>Competitive Prices</h4>
+                            <p>Quality organic products at prices that won't break the bank</p>
+                        </div>
+                    </div>
+
+                    <div class="why-choose-item">
+                        <i class="fas fa-check-circle"></i>
+                        <div>
+                            <h4>Fast & Secure</h4>
+                            <p>Quick delivery with secure payment options for your peace of mind</p>
+                        </div>
+                    </div>
+
+                    <div class="why-choose-item">
+                        <i class="fas fa-check-circle"></i>
+                        <div>
+                            <h4>Customer Support</h4>
+                            <p>Friendly support team ready to help with any questions</p>
+                        </div>
+                    </div>
+
+                    <div class="why-choose-item">
+                        <i class="fas fa-check-circle"></i>
+                        <div>
+                            <h4>Easy Returns</h4>
+                            <p>Not satisfied? We offer hassle-free returns and refunds</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Statistics -->
+            <div class="stats-section">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">10,000+</div>
+                        <div class="stat-label">Happy Customers</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-number">500+</div>
+                        <div class="stat-label">Organic Products</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-number">100+</div>
+                        <div class="stat-label">Partner Farms</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-number">6</div>
+                        <div class="stat-label">Years of Trust</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Call to Action -->
+            <div class="cta-section text-center">
+                <h2>Join the Organic Revolution</h2>
+                <p>Start your journey to healthier living today</p>
+                <div class="cta-buttons">
+                    <a href="{{ url_for('shop') }}" class="btn btn-primary btn-large">
+                        <i class="fas fa-shopping-bag"></i> Shop Now
+                    </a>
+                    <a href="{{ url_for('contact') }}" class="btn btn-outline btn-large">
+                        <i class="fas fa-envelope"></i> Contact Us
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

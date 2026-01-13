@@ -4495,3 +4495,604 @@ a {
         padding: 0.4rem 0.35rem;
     }
 }
+
+/* ============================================
+   About Us Page Styles
+   ============================================ */
+.about-section {
+    background: #fff;
+}
+
+.page-header {
+    margin-bottom: 50px;
+}
+
+.page-header h1 {
+    color: var(--primary-color);
+    font-size: 3rem;
+    margin-bottom: 15px;
+    font-weight: 700;
+}
+
+.page-header .lead {
+    font-size: 1.3rem;
+    color: #666;
+}
+
+.about-content {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* About Blocks */
+.about-block {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 50px;
+    margin-bottom: 80px;
+    align-items: center;
+}
+
+.about-block.reverse {
+    direction: rtl;
+}
+
+.about-block.reverse > * {
+    direction: ltr;
+}
+
+.about-image img {
+    width: 100%;
+    height: auto;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.rounded-image {
+    border-radius: 15px;
+}
+
+.about-text h2 {
+    color: var(--primary-color);
+    font-size: 2rem;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+.about-text h2 i {
+    margin-right: 10px;
+}
+
+.about-text p {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #555;
+    margin-bottom: 15px;
+}
+
+/* Values Section */
+.values-section {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    padding: 60px;
+    border-radius: 15px;
+    margin-bottom: 80px;
+}
+
+.values-section h2 {
+    color: var(--primary-color);
+    font-size: 2.5rem;
+    margin-bottom: 50px;
+    font-weight: 600;
+}
+
+.values-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+}
+
+.value-card {
+    background: white;
+    padding: 40px 30px;
+    border-radius: 15px;
+    text-align: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+}
+
+.value-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+}
+
+.value-icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 25px;
+}
+
+.value-icon i {
+    font-size: 2.5rem;
+    color: white;
+}
+
+.value-card h3 {
+    color: var(--text-color);
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.value-card p {
+    color: #666;
+    line-height: 1.6;
+}
+
+/* Why Choose Section */
+.why-choose-section {
+    margin-bottom: 80px;
+}
+
+.why-choose-section h2 {
+    color: var(--primary-color);
+    font-size: 2.5rem;
+    margin-bottom: 50px;
+    font-weight: 600;
+}
+
+.why-choose-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+.why-choose-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
+
+.why-choose-item:hover {
+    background: white;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+}
+
+.why-choose-item > i {
+    font-size: 2rem;
+    color: var(--primary-color);
+    flex-shrink: 0;
+}
+
+.why-choose-item h4 {
+    color: var(--text-color);
+    font-size: 1.2rem;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.why-choose-item p {
+    color: #666;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* Statistics Section */
+.stats-section {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    padding: 60px;
+    border-radius: 15px;
+    margin-bottom: 80px;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 40px;
+}
+
+.stat-card {
+    text-align: center;
+    color: white;
+}
+
+.stat-number {
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+}
+
+.stat-label {
+    font-size: 1.2rem;
+    opacity: 0.95;
+}
+
+/* CTA Section */
+.cta-section {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    padding: 80px 60px;
+    border-radius: 15px;
+}
+
+.cta-section h2 {
+    color: var(--primary-color);
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+    font-weight: 700;
+}
+
+.cta-section p {
+    font-size: 1.2rem;
+    color: #666;
+    margin-bottom: 30px;
+}
+
+.cta-buttons {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.btn-large {
+    padding: 15px 40px;
+    font-size: 1.1rem;
+}
+
+.btn-outline {
+    background: white;
+    color: var(--primary-color);
+    border: 2px solid var(--primary-color);
+}
+
+.btn-outline:hover {
+    background: var(--primary-color);
+    color: white;
+}
+
+/* ============================================
+   Contact Us Page Styles
+   ============================================ */
+.contact-section {
+    background: #fff;
+}
+
+.contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 50px;
+    margin-bottom: 80px;
+}
+
+/* Contact Form */
+.contact-form-container {
+    background: white;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+}
+
+.contact-form-container h2 {
+    color: var(--primary-color);
+    font-size: 2rem;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.contact-form-container h2 i {
+    margin-right: 10px;
+}
+
+.form-intro {
+    color: #666;
+    margin-bottom: 30px;
+    line-height: 1.6;
+}
+
+.contact-form label i {
+    margin-right: 8px;
+    color: var(--primary-color);
+}
+
+/* Contact Info */
+.contact-info-container {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    padding: 40px;
+    border-radius: 15px;
+    color: white;
+}
+
+.contact-info-container h2 {
+    color: white;
+    font-size: 2rem;
+    margin-bottom: 30px;
+    font-weight: 600;
+}
+
+.contact-info-container h2 i {
+    margin-right: 10px;
+}
+
+.contact-info-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.contact-info-card {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    padding: 25px;
+    border-radius: 10px;
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    transition: all 0.3s ease;
+}
+
+.contact-info-card:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: translateX(5px);
+}
+
+.contact-icon {
+    width: 50px;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.contact-icon i {
+    font-size: 1.5rem;
+}
+
+.contact-details h3 {
+    color: white;
+    font-size: 1.3rem;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.contact-details p {
+    line-height: 1.8;
+    margin: 0;
+}
+
+.contact-details small {
+    opacity: 0.9;
+}
+
+/* Social Section */
+.social-section {
+    margin-top: 40px;
+    padding-top: 30px;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.social-section h3 {
+    color: white;
+    font-size: 1.3rem;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+.social-links {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.social-link {
+    width: 45px;
+    height: 45px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+}
+
+.social-link:hover {
+    background: white;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.social-link.facebook:hover { color: #1877f2; }
+.social-link.twitter:hover { color: #1da1f2; }
+.social-link.instagram:hover { color: #e4405f; }
+.social-link.pinterest:hover { color: #bd081c; }
+.social-link.youtube:hover { color: #ff0000; }
+
+/* Map Section */
+.map-section {
+    margin-bottom: 80px;
+}
+
+.map-section h2 {
+    color: var(--primary-color);
+    font-size: 2rem;
+    margin-bottom: 30px;
+    font-weight: 600;
+}
+
+.map-container {
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+}
+
+.map-container iframe {
+    display: block;
+}
+
+/* FAQ Section */
+.faq-section {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    padding: 60px;
+    border-radius: 15px;
+}
+
+.faq-section h2 {
+    color: var(--primary-color);
+    font-size: 2rem;
+    margin-bottom: 40px;
+    font-weight: 600;
+}
+
+.faq-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+}
+
+.faq-item {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+}
+
+.faq-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.faq-item h3 {
+    color: var(--text-color);
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.faq-item h3 i {
+    color: var(--primary-color);
+    font-size: 1.5rem;
+}
+
+.faq-item p {
+    color: #666;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* Responsive Design for About and Contact Pages */
+@media (max-width: 992px) {
+    .about-block,
+    .contact-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+    
+    .about-block.reverse {
+        direction: ltr;
+    }
+    
+    .page-header h1 {
+        font-size: 2.5rem;
+    }
+    
+    .values-section,
+    .stats-section,
+    .cta-section,
+    .faq-section {
+        padding: 40px 30px;
+    }
+}
+
+@media (max-width: 768px) {
+    .page-header h1 {
+        font-size: 2rem;
+    }
+    
+    .page-header .lead {
+        font-size: 1.1rem;
+    }
+    
+    .about-text h2,
+    .values-section h2,
+    .why-choose-section h2,
+    .cta-section h2,
+    .contact-form-container h2,
+    .map-section h2,
+    .faq-section h2 {
+        font-size: 1.8rem;
+    }
+    
+    .about-block {
+        margin-bottom: 50px;
+    }
+    
+    .values-grid,
+    .why-choose-grid,
+    .stats-grid,
+    .faq-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .stat-number {
+        font-size: 2.5rem;
+    }
+    
+    .cta-buttons {
+        flex-direction: column;
+    }
+    
+    .btn-large {
+        width: 100%;
+    }
+    
+    .contact-info-container {
+        padding: 30px 20px;
+    }
+    
+    .values-section,
+    .stats-section,
+    .cta-section,
+    .faq-section {
+        padding: 30px 20px;
+    }
+}
+
+@media (max-width: 576px) {
+    .value-card {
+        padding: 30px 20px;
+    }
+    
+    .value-icon {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .value-icon i {
+        font-size: 2rem;
+    }
+    
+    .contact-form-container {
+        padding: 25px 20px;
+    }
+    
+    .map-container iframe {
+        height: 300px;
+    }
+}

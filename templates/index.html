@@ -66,10 +66,10 @@
             <div class="product-card">
                 <a href="{{ url_for('product_detail', product_id=product.id) }}">
                     <div class="product-image">
-                            {% set fallback_image = product.image_url or url_for('static', filename='images/placeholder.jpg') %}
-                            <img src="{{ url_for('static', filename='images/' + product.image) if product.image else fallback_image }}" 
-                                alt="{{ product.name }}"
-                                onerror="this.onerror=null; this.src='{{ fallback_image }}';">
+                        {% set fallback_image = product.image_url or url_for('static',
+                        filename='images/placeholder.jpg') %}
+                        <img src="{{ url_for('static', filename='images/' + product.image) if product.image else fallback_image }}"
+                            alt="{{ product.name }}" onerror="this.onerror=null; this.src='{{ fallback_image }}';">
                         <span class="badge-organic">Organic</span>
                     </div>
                 </a>
@@ -144,8 +144,8 @@
         <div class="team-grid">
             <div class="team-card">
                 <div class="team-image">
-                    <img src="{{ url_for('static', filename='images/team1.jpg') }}" alt="Team Member" 
-                         onerror="this.src='https://ui-avatars.com/api/?name=Rajesh+Kumar&background=27AE60&color=fff&size=300'">
+                    <img src="{{ url_for('static', filename='images/team1.jpg') }}" alt="Team Member"
+                        onerror="this.src='https://ui-avatars.com/api/?name=Rajesh+Kumar&background=27AE60&color=fff&size=300'">
                 </div>
                 <div class="team-info">
                     <h3>Rajesh Kumar</h3>
@@ -157,11 +157,11 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="team-card">
                 <div class="team-image">
-                    <img src="{{ url_for('static', filename='images/team2.jpg') }}" alt="Team Member" 
-                         onerror="this.src='https://ui-avatars.com/api/?name=Priya+Sharma&background=27AE60&color=fff&size=300'">
+                    <img src="{{ url_for('static', filename='images/team2.jpg') }}" alt="Team Member"
+                        onerror="this.src='https://ui-avatars.com/api/?name=Priya+Sharma&background=27AE60&color=fff&size=300'">
                 </div>
                 <div class="team-info">
                     <h3>Priya Sharma</h3>
@@ -173,11 +173,11 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="team-card">
                 <div class="team-image">
-                    <img src="{{ url_for('static', filename='images/team3.jpg') }}" alt="Team Member" 
-                         onerror="this.src='https://ui-avatars.com/api/?name=Amit+Patel&background=27AE60&color=fff&size=300'">
+                    <img src="{{ url_for('static', filename='images/team3.jpg') }}" alt="Team Member"
+                        onerror="this.src='https://ui-avatars.com/api/?name=Amit+Patel&background=27AE60&color=fff&size=300'">
                 </div>
                 <div class="team-info">
                     <h3>Amit Patel</h3>
@@ -189,23 +189,9 @@
                     </div>
                 </div>
             </div>
-            
-            <div class="team-card">
-                <div class="team-image">
-                    <img src="{{ url_for('static', filename='images/team4.jpg') }}" alt="Team Member" 
-                         onerror="this.src='https://ui-avatars.com/api/?name=Sneha+Reddy&background=27AE60&color=fff&size=300'">
-                </div>
-                <div class="team-info">
-                    <h3>Sneha Reddy</h3>
-                    <p class="team-role">Customer Relations Head</p>
-                    <p class="team-desc">Building lasting relationships with our valued customers</p>
-                    <div class="team-social">
-                        <a href="#" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
-                        <a href="#" title="Twitter"><i class="fab fa-twitter"></i></a>
-                    </div>
-                </div>
-            </div>
+
         </div>
+    </div>
     </div>
 </section>
 {% endblock %}

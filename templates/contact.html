@@ -1,0 +1,212 @@
+{% extends "base.html" %}
+
+{% block title %}Contact Us - Green Harvest{% endblock %}
+
+{% block content %}
+<!-- Breadcrumbs -->
+<div class="breadcrumbs">
+    <div class="container">
+        <a href="{{ url_for('index') }}">Home</a>
+        <i class="fas fa-chevron-right"></i>
+        <span>Contact Us</span>
+    </div>
+</div>
+
+<section class="section contact-section">
+    <div class="container">
+        <div class="page-header text-center">
+            <h1><i class="fas fa-envelope"></i> Contact Us</h1>
+            <p class="lead">We'd love to hear from you! Get in touch with us.</p>
+        </div>
+
+        <div class="contact-content">
+            <!-- Contact Form and Info Grid -->
+            <div class="contact-grid">
+                <!-- Contact Form -->
+                <div class="contact-form-container">
+                    <h2><i class="fas fa-paper-plane"></i> Send us a Message</h2>
+                    <p class="form-intro">Have a question or feedback? Fill out the form below and we'll get back to you within 24 hours.</p>
+
+                    <form class="contact-form" id="contactForm">
+                        <div class="form-group">
+                            <label for="name"><i class="fas fa-user"></i> Full Name *</label>
+                            <input type="text" id="name" name="name" class="form-control" required placeholder="Enter your full name">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email"><i class="fas fa-envelope"></i> Email Address *</label>
+                            <input type="email" id="email" name="email" class="form-control" required placeholder="your.email@example.com">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="phone"><i class="fas fa-phone"></i> Phone Number</label>
+                            <input type="tel" id="phone" name="phone" class="form-control" placeholder="+1 (123) 456-7890">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="subject"><i class="fas fa-tag"></i> Subject *</label>
+                            <select id="subject" name="subject" class="form-control" required>
+                                <option value="">Select a subject...</option>
+                                <option value="general">General Inquiry</option>
+                                <option value="order">Order Support</option>
+                                <option value="product">Product Information</option>
+                                <option value="partnership">Partnership Opportunities</option>
+                                <option value="feedback">Feedback & Suggestions</option>
+                                <option value="complaint">Complaint</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="message"><i class="fas fa-comment-alt"></i> Message *</label>
+                            <textarea id="message" name="message" class="form-control" rows="6" required placeholder="Tell us how we can help you..."></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-large btn-block">
+                            <i class="fas fa-paper-plane"></i> Send Message
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Contact Information -->
+                <div class="contact-info-container">
+                    <h2><i class="fas fa-info-circle"></i> Contact Information</h2>
+                    
+                    <div class="contact-info-cards">
+                        <div class="contact-info-card">
+                            <div class="contact-icon">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <div class="contact-details">
+                                <h3>Visit Us</h3>
+                                <p>123 Organic Farm Road<br>Green Valley, CA 94523<br>United States</p>
+                            </div>
+                        </div>
+
+                        <div class="contact-info-card">
+                            <div class="contact-icon">
+                                <i class="fas fa-phone"></i>
+                            </div>
+                            <div class="contact-details">
+                                <h3>Call Us</h3>
+                                <p><strong>Main:</strong> +1 (555) 123-4567<br>
+                                <strong>Support:</strong> +1 (555) 123-4568<br>
+                                <small>Mon-Fri, 9AM-6PM PST</small></p>
+                            </div>
+                        </div>
+
+                        <div class="contact-info-card">
+                            <div class="contact-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div class="contact-details">
+                                <h3>Email Us</h3>
+                                <p><strong>General:</strong> info@greenharvest.com<br>
+                                <strong>Support:</strong> support@greenharvest.com<br>
+                                <strong>Sales:</strong> sales@greenharvest.com</p>
+                            </div>
+                        </div>
+
+                        <div class="contact-info-card">
+                            <div class="contact-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="contact-details">
+                                <h3>Business Hours</h3>
+                                <p><strong>Monday - Friday:</strong> 9:00 AM - 6:00 PM<br>
+                                <strong>Saturday:</strong> 10:00 AM - 4:00 PM<br>
+                                <strong>Sunday:</strong> Closed</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Social Media -->
+                    <div class="social-section">
+                        <h3><i class="fas fa-share-alt"></i> Follow Us</h3>
+                        <div class="social-links">
+                            <a href="#" class="social-link facebook" title="Facebook">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+                            <a href="#" class="social-link twitter" title="Twitter">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                            <a href="#" class="social-link instagram" title="Instagram">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                            <a href="#" class="social-link pinterest" title="Pinterest">
+                                <i class="fab fa-pinterest-p"></i>
+                            </a>
+                            <a href="#" class="social-link youtube" title="YouTube">
+                                <i class="fab fa-youtube"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Map Section -->
+            <div class="map-section">
+                <h2 class="text-center"><i class="fas fa-map"></i> Find Us on the Map</h2>
+                <div class="map-container">
+                    <iframe 
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3153.0977131659847!2d-122.41941568468195!3d37.77492977975903!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8085809c6c8f4459%3A0xb10ed6d9b5050fa5!2sTwitter%20HQ!5e0!3m2!1sen!2sus!4v1620000000000!5m2!1sen!2sus" 
+                        width="100%" 
+                        height="450" 
+                        style="border:0;" 
+                        allowfullscreen="" 
+                        loading="lazy">
+                    </iframe>
+                </div>
+            </div>
+
+            <!-- FAQ Section -->
+            <div class="faq-section">
+                <h2 class="text-center"><i class="fas fa-question-circle"></i> Frequently Asked Questions</h2>
+                <div class="faq-grid">
+                    <div class="faq-item">
+                        <h3><i class="fas fa-shipping-fast"></i> Do you offer free shipping?</h3>
+                        <p>Yes! We offer free shipping on all orders over $50. For orders under $50, a flat shipping fee of $5.99 applies.</p>
+                    </div>
+
+                    <div class="faq-item">
+                        <h3><i class="fas fa-undo-alt"></i> What is your return policy?</h3>
+                        <p>We offer a 30-day money-back guarantee. If you're not satisfied with your purchase, you can return it within 30 days for a full refund.</p>
+                    </div>
+
+                    <div class="faq-item">
+                        <h3><i class="fas fa-certificate"></i> Are all products certified organic?</h3>
+                        <p>Yes! All our products are 100% certified organic and meet USDA organic standards. We work only with certified organic farmers and suppliers.</p>
+                    </div>
+
+                    <div class="faq-item">
+                        <h3><i class="fas fa-clock"></i> How long does delivery take?</h3>
+                        <p>Standard delivery takes 3-5 business days. Express delivery (1-2 days) is available for an additional fee at checkout.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+document.getElementById('contactForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // Get form data
+    const formData = {
+        name: document.getElementById('name').value,
+        email: document.getElementById('email').value,
+        phone: document.getElementById('phone').value,
+        subject: document.getElementById('subject').value,
+        message: document.getElementById('message').value
+    };
+    
+    // In a real application, you would send this to the server
+    // For now, we'll just show a success message
+    showToast('Message sent successfully! We\'ll get back to you within 24 hours.', 'success');
+    
+    // Reset form
+    this.reset();
+});
+</script>
+{% endblock %}

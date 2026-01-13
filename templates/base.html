@@ -37,6 +37,7 @@
 
                 <ul class="nav-menu" id="navMenu">
                     <li><a href="{{ url_for('index') }}">Home</a></li>
+                    <li><a href="{{ url_for('about') }}">About Us</a></li>
                     {% if not current_user.is_admin %}
                     <li class="dropdown">
                         <a href="{{ url_for('categories') }}" class="dropbtn">
@@ -188,6 +189,8 @@
                     <ul>
                         <li><a href="{{ url_for('index') }}">Home</a></li>
                         <li><a href="{{ url_for('categories') }}">Categories</a></li>
+                        <li><a href="{{ url_for('about') }}">About Us</a></li>
+                        <li><a href="{{ url_for('contact') }}">Contact Us</a></li>
                         {% if current_user.is_authenticated %}
                         <li><a href="{{ url_for('account') }}">My Account</a></li>
                         {% endif %}
@@ -197,7 +200,7 @@
                 <div class="footer-section">
                     <h4>Customer Service</h4>
                     <ul>
-                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="{{ url_for('contact') }}">Contact Us</a></li>
                         <li><a href="#">Shipping Info</a></li>
                         <li><a href="#">Returns</a></li>
                         <li><a href="#">FAQ</a></li>

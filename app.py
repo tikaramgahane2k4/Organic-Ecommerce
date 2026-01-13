@@ -319,6 +319,19 @@ def logout():
     return redirect(url_for('index'))
 
 
+# ==================== ABOUT US & CONTACT ====================
+@app.route('/about')
+def about():
+    """About Us page"""
+    return render_template('about.html')
+
+
+@app.route('/contact')
+def contact():
+    """Contact Us page"""
+    return render_template('contact.html')
+
+
 # ==================== WISHLIST ====================
 @app.route('/wishlist')
 @login_required
