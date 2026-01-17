@@ -3,7 +3,7 @@ import os
 class Config:
 
     # Database Configuration
-    SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URL") or "postgresql://postgres:Database%40123@localhost:5432/Organic-Ecommerce.db"
+    SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URL") or "postgresql://organic_ecommerce_user:rDGwLbP9eQxQNcNgTxYB4ogitEKNtceA@dpg-d5lsv1n5r7bs73cp7g4g-a/organic_ecommerce"
     
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'organic-ecommerce-key'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
