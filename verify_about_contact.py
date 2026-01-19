@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+
 """
 Verification script for About Us and Contact Us pages
 """

@@ -10,3 +10,6 @@ class Config:
     UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static', 'images')
     MAX_CONTENT_LENGTH = 16 * 1024 * 1024
 
+
+# Render External link
+# postgresql://organic_ecommerce_user:rDGwLbP9eQxQNcNgTxYB4ogitEKNtceA@dpg-d5lsv1n5r7bs73cp7g4g-a.virginia-postgres.render.com/organic_ecommerce

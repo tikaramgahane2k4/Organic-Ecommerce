@@ -90,7 +90,7 @@
                                 {% if product.image %}
                                 <img src="{{ url_for('static', filename='images/' + product.image) }}"
                                     alt="{{ product.name }}"
-                                    onerror="this.src='{{ product.image_url if product.image_url else url_for('static', filename='images/placeholder.jpg') }}'">
+                                    onerror="this.src='{{ product.image_url if product.image_url else url_for(&quot;static&quot;, filename=&quot;images/placeholder.jpg&quot;) }}'">
                                 {% elif product.image_url %}
                                 <img src="{{ product.image_url }}"
                                     alt="{{ product.name }}">
