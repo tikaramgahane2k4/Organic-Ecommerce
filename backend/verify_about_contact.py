@@ -6,6 +6,11 @@ Verification script for About Us and Contact Us pages
 import os
 import sys
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+ROOT_DIR = os.path.abspath(os.path.join(BASE_DIR, '..'))
+FRONTEND_DIR = os.path.join(ROOT_DIR, 'frontend')
+BACKEND_DIR = BASE_DIR
+
 def check_files():
     """Check if required files exist"""
     print("=" * 60)
@@ -13,8 +18,8 @@ def check_files():
     print("=" * 60)
     
     checks = {
-        'templates/about.html': 'About Us template',
-        'templates/contact.html': 'Contact Us template',
+        os.path.join(FRONTEND_DIR, 'templates', 'about.html'): 'About Us template',
+        os.path.join(FRONTEND_DIR, 'templates', 'contact.html'): 'Contact Us template',
     }
     
     all_passed = True
@@ -36,7 +41,7 @@ def check_routes():
     print("-" * 60)
     
     try:
-        with open('app.py', 'r') as f:
+        with open(os.path.join(BACKEND_DIR, 'app.py'), 'r') as f:
             content = f.read()
         
         routes = {
@@ -65,7 +70,7 @@ def check_css():
     print("-" * 60)
     
     try:
-        with open('static/css/style.css', 'r') as f:
+        with open(os.path.join(FRONTEND_DIR, 'static', 'css', 'style.css'), 'r') as f:
             content = f.read()
         
         styles = [
@@ -96,7 +101,7 @@ def check_footer_links():
     print("-" * 60)
     
     try:
-        with open('templates/base.html', 'r') as f:
+        with open(os.path.join(FRONTEND_DIR, 'templates', 'base.html'), 'r') as f:
             content = f.read()
         
         links = {

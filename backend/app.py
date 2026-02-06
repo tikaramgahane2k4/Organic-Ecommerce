@@ -1,12 +1,23 @@
+import os
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify, abort
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
-from config import Config
-from models import db, User, Category, Product, Wishlist, Cart, Order, OrderItem
-from forms import RegistrationForm, LoginForm, CheckoutForm, ProductForm
 from sqlalchemy import func
 from functools import wraps
 
-app = Flask(__name__)
+from .config import Config
+from .models import db, User, Category, Product, Wishlist, Cart, Order, OrderItem
+from .forms import RegistrationForm, LoginForm, CheckoutForm, ProductForm
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+FRONTEND_DIR = os.path.abspath(os.path.join(BASE_DIR, '..', 'frontend'))
+TEMPLATE_DIR = os.path.join(FRONTEND_DIR, 'templates')
+STATIC_DIR = os.path.join(FRONTEND_DIR, 'static')
+app = Flask(
+    __name__,
+    template_folder=TEMPLATE_DIR,
+    static_folder=STATIC_DIR,
+    static_url_path='/static'
+)
 app.config.from_object(Config)
 
 # Initialize extensions

@@ -7,7 +7,8 @@ class Config:
     
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'organic-ecommerce-key'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static', 'images')
+    PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+    UPLOAD_FOLDER = os.path.join(PROJECT_ROOT, 'frontend', 'static', 'images')
     MAX_CONTENT_LENGTH = 16 * 1024 * 1024
 
 
