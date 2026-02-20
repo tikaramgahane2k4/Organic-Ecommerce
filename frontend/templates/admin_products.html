@@ -36,7 +36,7 @@
                     <tbody>
                         {% for product in products %}
                         <tr>
-                            <td>{{ product.id }}</td>
+                            <td>{{ product._id }}</td>
                             <td>
                                   {% set fallback_image = product.image_url or url_for('static', filename='images/placeholder.jpg') %}
                                   <img src="{{ url_for('static', filename='images/' + product.image) if product.image else fallback_image }}" 
@@ -44,7 +44,7 @@
                                       onerror="this.onerror=null; this.src='{{ fallback_image }}';">
                             </td>
                             <td><strong>{{ product.name }}</strong></td>
-                            <td>{{ product.category.name }}</td>
+                            <td>{{ product.category_name }}</td>
                             <td>₹{{ product.price }}</td>
                             <td>
                                 {% if product.stock > 10 %}
@@ -56,15 +56,15 @@
                                 {% endif %}
                             </td>
                             <td>
-                                <a href="{{ url_for('product_detail', product_id=product.id) }}" 
-                                   class="btn-small btn-view" title="View">
+                                          <a href="{{ url_for('product_detail', product_id=product._id) }}" 
+                                              class="btn-small btn-view" title="View">
                                     <i class="fas fa-eye"></i>
                                 </a>
-                                <a href="{{ url_for('admin_edit_product', product_id=product.id) }}" 
-                                   class="btn-small btn-edit" title="Edit">
+                                          <a href="{{ url_for('admin_edit_product', product_id=product._id) }}" 
+                                              class="btn-small btn-edit" title="Edit">
                                     <i class="fas fa-edit"></i>
                                 </a>
-                                <button data-product-id="{{ product.id }}" 
+                                <button data-product-id="{{ product._id }}" 
                                     data-product-name="{{ product.name }}"
                                     onclick="confirmDelete(this)" 
                                     class="btn-small btn-delete" title="Delete">

@@ -28,7 +28,7 @@
                             <p class="price">₹{{ "%.2f"|format(item.product.price) }}</p>
                             
                             <div class="wishlist-actions">
-                                <form action="{{ url_for('add_to_cart', product_id=item.product.id) }}" method="POST" class="inline-form">
+                                <form action="{{ url_for('add_to_cart', product_id=item.product._id) }}" method="POST" class="inline-form">
                                     <input type="hidden" name="quantity" value="1">
                                     <button type="submit" class="btn btn-primary btn-small">
                                         <i class="fas fa-shopping-cart"></i> Add to Cart

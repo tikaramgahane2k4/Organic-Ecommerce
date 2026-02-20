@@ -37,10 +37,10 @@
                             class="filter-option {% if not current_category %}active{% endif %}">
                             <span>All Products</span>
                         </a>
-                        {% for category, product_count in categories %}
-                        <a href="{{ url_for('categories', category=category.id) }}"
-                            class="filter-option {% if current_category and current_category.id == category.id %}active{% endif %}">
-                            <span>{{ category.name }} ({{ product_count }})</span>
+                        {% for category in categories %}
+                        <a href="{{ url_for('categories', category=category._id) }}"
+                            class="filter-option {% if current_category and current_category._id == category._id %}active{% endif %}">
+                            <span>{{ category.name }} ({{ category.product_count }})</span>
                         </a>
                         {% endfor %}
                     </div>
@@ -64,18 +64,28 @@
                         </a>
                     </div>
 
-                    <!-- Price Range Input -->
+                    <!-- Single Price Range Slider -->
                     <div class="price-range-filter">
-                        <label for="min_price">Min: ₹</label>
-                        <input type="number" id="min_price" placeholder="100"
-                            value="{{ request.args.get('price_min', '') }}" class="price-input">
-
-                        <label for="max_price">Max: ₹</label>
-                        <input type="number" id="max_price" placeholder="10000"
-                            value="{{ request.args.get('price_max', '') }}" class="price-input">
-
-                        <button class="btn-apply-price" onclick="applyPriceFilter()">Apply</button>
+                        <label for="price_range">Price up to: ₹<span id="price_range_value">{{ request.args.get('price_max', max_price) }}</span></label>
+                        <input type="range" id="price_range_max" min="0" max="{{ max_price }}" step="1" value="{{ request.args.get('price_max', max_price) }}" oninput="updatePriceRange()">
+                        <button class="btn-apply-price" onclick="applyPriceRangeSlider()">Apply</button>
                     </div>
+                {% block scripts %}
+                <script>
+                function updatePriceRange() {
+                    const max = document.getElementById('price_range_max').value;
+                    document.getElementById('price_range_value').textContent = `${max}`;
+                }
+
+                function applyPriceRangeSlider() {
+                    const max = document.getElementById('price_range_max').value;
+                    const url = new URL(window.location.href);
+                    url.searchParams.set('price_min', 0);
+                    url.searchParams.set('price_max', max);
+                    window.location.href = url.toString();
+                }
+                </script>
+                {% endblock %}
                 </div>
             </aside>
 
@@ -88,9 +98,10 @@
                         <a href="{{ url_for('product_detail', product_id=product.id) }}">
                             <div class="product-image">
                                 {% if product.image %}
+                                {% set fallback_img = product.image_url if product.image_url else url_for('static', filename='images/placeholder.jpg') %}
                                 <img src="{{ url_for('static', filename='images/' + product.image) }}"
                                     alt="{{ product.name }}"
-                                    onerror="this.src='{{ product.image_url if product.image_url else url_for('static', filename='images/placeholder.jpg') }}'">
+                                    onerror="this.src='{{ fallback_img }}'">
                                 {% elif product.image_url %}
                                 <img src="{{ product.image_url }}"
                                     alt="{{ product.name }}">
@@ -106,15 +117,15 @@
                             <div class="product-header">
                                 <h3><a href="{{ url_for('product_detail', product_id=product.id) }}">{{ product.name }}</a>
                                 </h3>
-                                <span class="price">₹{{ "%.2f"|format(product.price) }}</span>
+                                  <span class="price">₹{{ "{:,}".format(product.price|int) }}</span>
                             </div>
-                            <p class="product-category">{{ product.category.name }}</p>
+                            <p class="product-category">{{ product.category_name }}</p>
                             <div class="product-footer">
                                 {% if not current_user.is_admin %}
                                 <div class="product-actions">
-                                    <button class="btn-icon add-to-wishlist" data-product-id="{{ product.id }}"
+                                    <button class="btn-icon add-to-wishlist" data-product-id="{{ product._id }}"
                                         title="Add to Wishlist">
-                                        <i class="far fa-heart"></i>
+                                        <i class="{% if product.in_wishlist %}fas{% else %}far{% endif %} fa-heart"></i>
                                     </button>
                                     <div class="cart-action" data-product-id="{{ product.id }}">
                                         {% if cart_quantities.get(product.id) %}
@@ -140,15 +151,32 @@
                     </div>
                     {% endfor %}
                 </div>
+                <!-- Pagination Controls -->
+                {% if total_pages > 1 %}
+                <nav class="pagination-nav">
+                  <ul class="pagination">
+                    {% if page > 1 %}
+                      <li><a href="{{ url_for('categories', page=page-1, category=request.args.get('category'), search=search_query, sort=request.args.get('sort'), price_min=request.args.get('price_min'), price_max=request.args.get('price_max')) }}">&laquo; Prev</a></li>
+                    {% endif %}
+                    {% for p in range(1, total_pages+1) %}
+                      <li {% if p == page %}class="active"{% endif %}><a href="{{ url_for('categories', page=p, category=request.args.get('category'), search=search_query, sort=request.args.get('sort'), price_min=request.args.get('price_min'), price_max=request.args.get('price_max')) }}">{{ p }}</a></li>
+                    {% endfor %}
+                    {% if page < total_pages %}
+                      <li><a href="{{ url_for('categories', page=page+1, category=request.args.get('category'), search=search_query, sort=request.args.get('sort'), price_min=request.args.get('price_min'), price_max=request.args.get('price_max')) }}">Next &raquo;</a></li>
+                    {% endif %}
+                  </ul>
+                </nav>
+                {% endif %}
+                <!-- End Pagination Controls -->
                 {% else %}
                 <div class="empty-state">
                     <i class="fas fa-box-open"></i>
-                    <h3>No Products Found</h3>
+                    <h3>No products found in this price range</h3>
                     <p>
                         {% if search_query %}
-                        No products match your search "{{ search_query }}". Try different keywords.
+                        No products match your search "{{ search_query }}" in this price range. Try different keywords or adjust the range.
                         {% else %}
-                        We couldn't find any products in this category.
+                        We couldn't find any products in this price range.
                         {% endif %}
                     </p>
                     <a href="{{ url_for('categories') }}" class="btn btn-primary">View All Products</a>

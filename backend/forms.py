@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, TextAreaField, IntegerField, FloatField, SelectField, RadioField
 from wtforms.validators import DataRequired, Email, EqualTo, ValidationError, Length, NumberRange
-from .models import User
+
 
 class RegistrationForm(FlaskForm):
     """User registration form"""
@@ -24,8 +24,12 @@ class RegistrationForm(FlaskForm):
     submit = SubmitField('Sign Up')
     
     def validate_email(self, email):
-        """Check if email already exists"""
-        user = User.query.filter_by(email=email.data).first()
+        """Check if email already exists (MongoDB)"""
+        try:
+            from backend.app import mongo
+        except ImportError:
+            mongo = None
+        user = mongo.db.users.find_one({'email': email.data}) if mongo else None
         if user:
             raise ValidationError('Email already registered. Please use a different email or login.')
 
@@ -89,7 +93,7 @@ class ProductForm(FlaskForm):
         DataRequired(message='Stock quantity is required'),
         NumberRange(min=0, message='Stock cannot be negative')
     ])
-    category_id = SelectField('Category', coerce=int, validators=[
+    category_id = SelectField('Category', coerce=str, validators=[
         DataRequired(message='Please select a category')
     ])
     image_source = RadioField('Image Source', choices=[('file', 'Upload Local File'), ('url', 'Use Image Link')], default='file')

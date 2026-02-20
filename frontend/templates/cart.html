@@ -45,7 +45,7 @@
                                     <span class="total-amount">₹{{ "%.2f"|format(item.product.price * item.quantity) }}</span>
                                 </div>
                                 
-                                <form action="{{ url_for('remove_from_cart', cart_id=item.id) }}" method="POST" class="remove-form">
+                                <form action="{{ url_for('remove_from_cart', cart_id=item.id) }}" method="POST" class="remove-form" data-cart-id="{{ item.id }}">
                                     <button type="submit" class="btn-remove" title="Remove item">
                                         <i class="fas fa-trash-alt"></i> Remove
                                     </button>
@@ -129,6 +129,47 @@ document.addEventListener('DOMContentLoaded', function() {
             const cartId = this.getAttribute('data-cart-id');
             const quantity = parseInt(this.getAttribute('data-quantity'));
             updateQuantity(cartId, quantity);
+        });
+    });
+    // Use AJAX for cart item removal to prevent invalid cart item popup and reload
+    document.querySelectorAll('.remove-form').forEach(form => {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const cartId = this.getAttribute('data-cart-id');
+            const btn = this.querySelector('button[type="submit"]');
+            if (!cartId) {
+                showNotification('Invalid cart item.', 'warning');
+                return;
+            }
+            // Disable button to prevent double submit
+            if (btn) btn.disabled = true;
+            fetch(`/cart/remove/${cartId}`, {
+                method: 'POST',
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            })
+            .then(response => {
+                if (response.redirected) {
+                    window.location.href = response.url;
+                    return null;
+                }
+                return response.text();
+            })
+            .then(() => {
+                // Hide the cart item card and show notification
+                const card = this.closest('.cart-item-card');
+                if (card) card.style.display = 'none';
+                showNotification('Item removed from cart', 'success');
+                // Update navbar cart badge
+                if (typeof updateCartCount === 'function') updateCartCount();
+                // If no items left, reload to show empty cart state
+                if (document.querySelectorAll('.cart-item-card:not([style*="display: none"])').length === 0) {
+                    window.location.reload();
+                }
+            })
+            .catch(() => {
+                showNotification('Could not remove item', 'warning');
+                if (btn) btn.disabled = false;
+            });
         });
     });
 });

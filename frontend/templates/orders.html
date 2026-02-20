@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}My Orders - Green Harvest{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <div class="page-header">
+            <h1><i class="fas fa-shopping-bag"></i> My Orders</h1>
+            <p>View your order history and details below.</p>
+        </div>
+        {% if orders %}
+        <div class="orders-list">
+            {% for order in orders %}
+            <div class="order-card">
+                <div class="order-header">
+                    <span class="order-id">Order ID: {{ order.id }}</span>
+                    <span class="order-date">{{ order.created_at.strftime('%d %b %Y, %I:%M %p') if order.created_at else '' }}</span>
+                    <span class="order-total">Total: ₹{{ order.total_amount }}</span>
+                </div>
+                <div class="order-details">
+                    <strong>Shipping Name:</strong> {{ order.shipping_name }}<br>
+                    <strong>Shipping Email:</strong> {{ order.shipping_email }}<br>
+                    <strong>Shipping Address:</strong> {{ order.shipping_address }}, {{ order.shipping_city }}<br>
+                </div>
+                {% if order.items %}
+                <div class="order-products">
+                    <strong>Products:</strong>
+                    <ul>
+                        {% for item in order.items %}
+                        <li>{{ item.name }} (x{{ item.quantity }}) - ₹{{ item.price }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <i class="fas fa-box-open"></i>
+            <h3>No orders found</h3>
+            <p>You have not placed any orders yet.</p>
+            <a href="{{ url_for('categories') }}" class="btn btn-primary">Start Shopping</a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

@@ -64,7 +64,7 @@
         <div class="products-grid">
             {% for product in products %}
             <div class="product-card">
-                <a href="{{ url_for('product_detail', product_id=product.id) }}">
+                <a href="{{ url_for('product_detail', product_id=product._id) }}">
                     <div class="product-image">
                         {% set fallback_image = product.image_url or url_for('static',
                         filename='images/placeholder.jpg') %}
@@ -76,17 +76,17 @@
 
                 <div class="product-info">
                     <div class="product-header">
-                        <h3><a href="{{ url_for('product_detail', product_id=product.id) }}">{{ product.name }}</a></h3>
+                        <h3><a href="{{ url_for('product_detail', product_id=product._id) }}">{{ product.name }}</a></h3>
                         <span class="price">₹{{ "%.2f"|format(product.price) }}</span>
                     </div>
                     <p class="product-category">{{ product.category.name }}</p>
                     <div class="product-footer">
                         {% if not current_user.is_admin %}
                         <div class="product-actions">
-                            <button class="add-to-wishlist" data-product-id="{{ product.id }}" title="Add to Wishlist">
+                            <button class="add-to-wishlist" data-product-id="{{ product._id }}" title="Add to Wishlist">
                                 <i class="far fa-heart"></i>
                             </button>
-                            <form action="{{ url_for('add_to_cart', product_id=product.id) }}" method="POST"
+                            <form action="{{ url_for('add_to_cart', product_id=product._id) }}" method="POST"
                                 class="inline-form">
                                 <input type="hidden" name="quantity" value="1">
                                 <input type="hidden" name="redirect_to" value="cart">

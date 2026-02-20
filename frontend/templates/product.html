@@ -17,7 +17,7 @@
                 <div class="breadcrumb">
                     <a href="{{ url_for('index') }}">Home</a> /
                     <a href="{{ url_for('categories') }}">Categories</a> /
-                    <a href="{{ url_for('categories', category=product.category_id) }}">{{ product.category.name }}</a>
+                    <a href="{{ url_for('categories', category=product.category_id) }}">{{ product.category_name }}</a>
                     /
                     <span>{{ product.name }}</span>
                 </div>
@@ -51,7 +51,7 @@
 
                 {% if product.stock > 0 %}
                 {% if not current_user.is_admin %}
-                <form action="{{ url_for('add_to_cart', product_id=product.id) }}" method="POST"
+                <form action="{{ url_for('add_to_cart', product_id=product._id) }}" method="POST"
                     class="add-to-cart-form">
                     <div class="quantity-selector">
                         <label>Quantity:</label>
@@ -65,7 +65,7 @@
 
                     <div class="product-actions-detail">
                         <button type="submit" class="btn btn-primary btn-large">
-                            <i class="fas fa-shopping-cart"></i> Add to Cart
+                            <i class="fas fa-shopping-cart" style="margin-right:8px;"></i> Add to Cart
                         </button>
 
                         {% if in_wishlist %}
@@ -74,8 +74,8 @@
                         </button>
                         {% else %}
                         <button type="button" class="btn btn-secondary btn-large add-to-wishlist"
-                            data-product-id="{{ product.id }}">
-                            <i class="far fa-heart"></i> Add to Wishlist
+                            data-product-id="{{ product._id }}">
+                            <i class="far fa-heart" style="margin-right:8px;"></i> Add to Wishlist
                         </button>
                         {% endif %}
                     </div>
@@ -97,7 +97,7 @@
             <div class="products-grid">
                 {% for related in related_products %}
                 <div class="product-card">
-                    <a href="{{ url_for('product_detail', product_id=related.id) }}">
+                    <a href="{{ url_for('product_detail', product_id=related._id) }}">
                         <div class="product-image">
                             {% set related_fallback = related.image_url or url_for('static', filename='images/placeholder.jpg') %}
                             <img src="{{ url_for('static', filename='images/' + related.image) if related.image else related_fallback }}"
@@ -107,8 +107,8 @@
                         </div>
                     </a>
                     <div class="product-info">
-                        <h3><a href="{{ url_for('product_detail', product_id=related.id) }}">{{ related.name }}</a></h3>
-                        <p class="product-category">{{ related.category.name }}</p>
+                        <h3><a href="{{ url_for('product_detail', product_id=related._id) }}">{{ related.name }}</a></h3>
+                        <p class="product-category">{{ related.category_name }}</p>
                         <div class="product-footer">
                             <span class="price">₹{{ "%.2f"|format(related.price) }}</span>
                         </div>

@@ -1,25 +1,18 @@
 // ==================== FLASH MESSAGES ====================
 document.addEventListener('DOMContentLoaded', function() {
-    // Auto-close flash messages
+    // Auto-close flash messages instantly
     const closeButtons = document.querySelectorAll('.close-alert');
     closeButtons.forEach(button => {
         button.addEventListener('click', function() {
-            this.parentElement.style.animation = 'slideUp 0.3s ease';
-            setTimeout(() => {
-                this.parentElement.remove();
-            }, 300);
+            this.parentElement.remove();
         });
     });
-    
-    // Auto-hide flash messages after 5 seconds
+    // Auto-hide flash messages after 3 seconds (faster)
     const alerts = document.querySelectorAll('.alert');
     alerts.forEach(alert => {
         setTimeout(() => {
-            alert.style.animation = 'slideUp 0.3s ease';
-            setTimeout(() => {
-                alert.remove();
-            }, 300);
-        }, 5000);
+            alert.remove();
+        }, 3000);
     });
 });
 
@@ -61,29 +54,28 @@ document.addEventListener('DOMContentLoaded', function() {
 // ==================== WISHLIST HEART TOGGLE ==================== 
 document.addEventListener('DOMContentLoaded', function() {
     const wishlistButtons = document.querySelectorAll('.add-to-wishlist');
-    
     wishlistButtons.forEach(button => {
         button.addEventListener('click', function(e) {
             e.preventDefault();
             e.stopPropagation();
             const productId = this.getAttribute('data-product-id');
             const icon = this.querySelector('i');
-            
+            // Show spinner instantly
+            icon.classList.add('fa-spin');
             fetch(`/wishlist/add/${productId}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                }
+                },
+                credentials: 'same-origin'
             })
             .then(response => response.json())
             .then(data => {
+                icon.classList.remove('fa-spin');
                 if (data.success) {
-                    // Update wishlist badge
                     updateWishlistBadge(data.wishlist_count);
-                    
                     if (data.action === 'added') {
                         showNotification('Added to wishlist!', 'success');
-                        // Toggle heart icon color
                         icon.classList.remove('far');
                         icon.classList.add('fas');
                         button.style.color = 'var(--danger)';
@@ -96,9 +88,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             })
             .catch(error => {
-                showNotification('Please login to add to wishlist', 'warning');
+                icon.classList.remove('fa-spin');
+                if (!window.currentUserIsAuthenticated) {
+                    showNotification('Please login to add to wishlist', 'warning');
+                }
             });
-            
             return false;
         });
     });
@@ -346,7 +340,8 @@ function handleQuickAddClick(e) {
     const button = e.currentTarget;
     const productId = button.dataset.productId;
     const actionContainer = button.closest('.cart-action');
-
+    // Show spinner instantly
+    button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding...';
     fetch(`/cart/add/${productId}`, {
         method: 'POST',
         headers: {
@@ -365,19 +360,21 @@ function handleQuickAddClick(e) {
         if (!data) return;
         if (!data.success) {
             showNotification(data.message || 'Unable to add to cart', 'warning');
+            button.innerHTML = '<i class="fas fa-shopping-bag"></i><span>Add to Cart</span>';
             return;
         }
-
         const control = createQtyControl(productId, data.quantity || 1);
         if (actionContainer) {
             actionContainer.innerHTML = '';
             actionContainer.appendChild(control);
         }
-
         updateCartBadge(data.cart_count);
         showNotification('Added to cart', 'success');
     })
-    .catch(() => showNotification('Please login to add to cart', 'warning'));
+    .catch(() => {
+        showNotification('Please login to add to cart', 'warning');
+        button.innerHTML = '<i class="fas fa-shopping-bag"></i><span>Add to Cart</span>';
+    });
 }
 
 function handleQtyButtonClick(e) {

@@ -80,16 +80,16 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for category_name, product_count in category_stats %}
+                            {% for cat in category_stats %}
                             <tr>
                                 <td>
-                                    <strong>{{ category_name }}</strong>
+                                    <strong>{{ cat.name }}</strong>
                                 </td>
                                 <td>
-                                    <span class="badge-count">{{ product_count }} products</span>
+                                    <span class="badge-count">{{ cat.product_count }} products</span>
                                 </td>
                                 <td>
-                                    <a href="{{ url_for('categories', category=loop.index) }}" class="btn-small btn-view">
+                                    <a href="{{ url_for('categories', category=cat._id) }}" class="btn-small btn-view">
                                         <i class="fas fa-eye"></i> View
                                     </a>
                                 </td>
@@ -135,14 +135,14 @@
                                     <span class="badge badge-danger">Out of Stock</span>
                                     {% endif %}
                                 </td>
-                                <td>{{ product.category.name }}</td>
+                                <td>{{ product.category_name }}</td>
                                 <td>
-                                    <a href="{{ url_for('admin_edit_product', product_id=product.id) }}" 
-                                       class="btn-small btn-edit">
+                                                <a href="{{ url_for('admin_edit_product', product_id=product._id) }}" 
+                                                    class="btn-small btn-edit">
                                         <i class="fas fa-edit"></i>
                                     </a>
-                                    <a href="{{ url_for('product_detail', product_id=product.id) }}" 
-                                       class="btn-small btn-view">
+                                                <a href="{{ url_for('product_detail', product_id=product._id) }}" 
+                                                    class="btn-small btn-view">
                                         <i class="fas fa-eye"></i>
                                     </a>
                                 </td>
@@ -169,17 +169,17 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for user, order_count in users %}
+                            {% for user_obj in users %}
                             <tr>
-                                <td><strong>#{{ user.id }}</strong></td>
-                                <td>{{ user.name }}</td>
-                                <td>{{ user.email }}</td>
+                                <td><strong>#{{ user_obj.user._id }}</strong></td>
+                                <td>{{ user_obj.user.name }}</td>
+                                <td>{{ user_obj.user.email }}</td>
                                 <td>
-                                    <span class="badge-count">{{ order_count }} orders</span>
+                                    <span class="badge-count">{{ user_obj.order_count }} orders</span>
                                 </td>
-                                <td>{{ user.created_at.strftime('%d %b, %Y') }}</td>
+                                <td>{{ user_obj.user.created_at.strftime('%d %b, %Y') if user_obj.user.created_at else '' }}</td>
                                 <td>
-                                    <a href="{{ url_for('admin_user_orders', user_id=user.id) }}" 
+                                    <a href="{{ url_for('admin_user_orders', user_id=user_obj.user._id) }}" 
                                        class="btn-small btn-view">
                                         <i class="fas fa-shopping-bag"></i> View Orders
                                     </a>
