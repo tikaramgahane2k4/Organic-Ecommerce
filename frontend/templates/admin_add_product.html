@@ -50,7 +50,17 @@
                         </div>
                         {% endif %}
                     </div>
-
+                    <div class="form-group">
+                        <label for="unit">{{ form.unit.label }}</label>
+                        {{ form.unit(class="form-control") }}
+                        {% if form.unit.errors %}
+                        <div class="error-message">
+                            {% for error in form.unit.errors %}
+                            <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
                     <div class="form-group">
                         <label for="stock">{{ form.stock.label }}</label>
                         {{ form.stock(class="form-control") }}

@@ -1,3 +1,23 @@
+/* Unit section for price display */
+.unit-section {
+    display: inline-flex;
+    align-items: center;
+    margin-left: 10px;
+    padding: 2px 8px;
+    background: #f3f3f3;
+    border-radius: 6px;
+    font-size: 1rem;
+    color: #444;
+    font-weight: 500;
+}
+.unit-value {
+    font-weight: 700;
+    margin-right: 2px;
+}
+.unit-label {
+    text-transform: lowercase;
+    color: #666;
+}
 /* ==================== GLOBAL STYLES ==================== */
 * {
     margin: 0;
@@ -80,22 +100,25 @@ a {
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     position: sticky;
     top: 0;
-    z-index: 1000;
+.unit-section {
+    display: inline-flex;
+    align-items: center;
+    margin-left: 10px;
+    padding: 2px 8px;
+    background: #f3f3f3;
+    border-radius: 6px;
+    font-size: 1rem;
+    color: #444;
+    font-weight: 500;
 }
-
-/* ==================== ADMIN PANEL (RESPONSIVE) ==================== */
-/* Shared admin helpers across all admin templates */
-.admin-section {
-    padding: 40px 0;
-    background: #f8f9fa;
-    min-height: calc(100vh - 200px);
+.unit-value {
+    font-weight: 700;
+    margin-right: 2px;
 }
-
-.admin-panel {
-    background: #fff;
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+.unit-label {
+    text-transform: lowercase;
+    color: #666;
+}
 }
 
 .admin-actions {

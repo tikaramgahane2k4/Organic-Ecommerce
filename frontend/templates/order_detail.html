@@ -46,7 +46,9 @@
                                     <p class="item-description">{{ item.product.description[:100] }}...</p>
                                     <div class="item-meta">
                                         <span class="quantity">Quantity: {{ item.quantity }}</span>
-                                        <span class="price">₹{{ "%.2f"|format(item.price) }} each</span>
+                                        <span class="price">₹{{ "%.2f"|format(item.price) }} per {{ item.product.unit }}</span>
+                                                                            <span class="price">₹{{ "%.2f"|format(item.price) }}</span>
+                                                                            <span class="unit-section"><span class="unit-value">1</span> <span class="unit-label">{{ item.product.unit }}</span></span>
                                     </div>
                                 </div>
                                 <div class="item-total">

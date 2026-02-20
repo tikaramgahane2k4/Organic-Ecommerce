@@ -1,14 +1,4 @@
 # ==================== USER ORDERS ====================
-@app.route('/orders')
-@login_required
-def orders():
-    """Display user's orders (MongoDB)"""
-    from bson import ObjectId
-    user_orders = list(mongo.db.orders.find({'user_id': str(current_user.id)}))
-    # Attach product details to each order (if needed)
-    for order in user_orders:
-        order['id'] = str(order['_id'])
-    return render_template('orders.html', orders=user_orders)
 import os
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify, abort
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user, UserMixin
@@ -30,6 +20,18 @@ app = Flask(
     static_url_path='/static'
 )
 app.config.from_object(Config)
+
+# User Orders Route (moved here to ensure 'app' is defined)
+@app.route('/orders')
+@login_required
+def orders():
+    """Display user's orders (MongoDB)"""
+    from bson import ObjectId
+    user_orders = list(mongo.db.orders.find({'user_id': str(current_user.id)}))
+    # Attach product details to each order (if needed)
+    for order in user_orders:
+        order['id'] = str(order['_id'])
+    return render_template('orders.html', orders=user_orders)
 
 # Initialize MongoDB
 mongo = PyMongo(app, uri=app.config['MONGODB_URI'])
@@ -320,8 +322,12 @@ def product_detail(product_id):
     if not product:
         return abort(404)
     in_wishlist = False
+    item_quantity = 0
     if current_user.is_authenticated:
         in_wishlist = mongo.db.wishlist.find_one({'user_id': str(current_user.id), 'product_id': product_id}) is not None
+        cart_item = mongo.db.cart.find_one({'user_id': str(current_user.id), 'product_id': product_id})
+        if cart_item:
+            item_quantity = cart_item.get('quantity', 1)
     # Get related products from the same category
     related_products = list(mongo.db.products.find({
         'category_id': product['category_id'],
@@ -329,7 +335,8 @@ def product_detail(product_id):
     }).limit(4))
     return render_template('product.html', product=product,
                          in_wishlist=in_wishlist,
-                         related_products=related_products)
+                         related_products=related_products,
+                         item_quantity=item_quantity)
 
 
 # ==================== AUTHENTICATION ====================
@@ -652,7 +659,8 @@ def checkout():
             order_doc['items'].append({
                 'product_id': cart_item['product_id'] if isinstance(cart_item, dict) else str(cart_item.product_id),
                 'quantity': cart_item['quantity'] if isinstance(cart_item, dict) else cart_item.quantity,
-                'price': cart_item['product']['price'] if isinstance(cart_item, dict) and 'product' in cart_item else (cart_item.product.price if hasattr(cart_item, 'product') else 0)
+                'price': cart_item['product']['price'] if isinstance(cart_item, dict) and 'product' in cart_item else (cart_item.product.price if hasattr(cart_item, 'product') else 0),
+                'unit': cart_item['product']['unit'] if isinstance(cart_item, dict) and 'product' in cart_item and 'unit' in cart_item['product'] else (cart_item.product.unit if hasattr(cart_item, 'product') and hasattr(cart_item.product, 'unit') else 'kg')
             })
         # Insert order
         result = mongo.db.orders.insert_one(order_doc)

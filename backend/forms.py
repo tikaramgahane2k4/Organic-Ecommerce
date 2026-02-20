@@ -85,7 +85,7 @@ class ProductForm(FlaskForm):
         DataRequired(message='Description is required'),
         Length(min=10, max=1000, message='Description must be between 10 and 1000 characters')
     ])
-    price = FloatField('Price (₹)', validators=[
+    price = FloatField('Price', validators=[
         DataRequired(message='Price is required'),
         NumberRange(min=0.01, message='Price must be greater than 0')
     ])

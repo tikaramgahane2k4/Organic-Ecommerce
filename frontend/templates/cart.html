@@ -26,7 +26,7 @@
                             <div class="item-info">
                                 <h3><a href="{{ url_for('product_detail', product_id=item.product.id) }}">{{ item.product.name }}</a></h3>
                                 <p class="item-category"><i class="fas fa-tag"></i> {{ item.product.category.name }}</p>
-                                <p class="item-price-unit">₹{{ "%.2f"|format(item.product.price) }} per unit</p>
+                                <p class="item-price-unit">₹{{ "%.2f"|format(item.product.price) }}</p>
                             </div>
                             
                             <div class="item-actions">

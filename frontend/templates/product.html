@@ -51,16 +51,22 @@
 
                 {% if product.stock > 0 %}
                 {% if not current_user.is_admin %}
+
                 <form action="{{ url_for('add_to_cart', product_id=product._id) }}" method="POST"
                     class="add-to-cart-form">
                     <div class="quantity-selector">
                         <label>Quantity:</label>
                         <div class="quantity-input">
                             <button type="button" class="qty-btn" onclick="decreaseQty()">-</button>
-                            <input type="number" name="quantity" id="quantity" value="1" min="1"
+                            <input type="number" name="quantity" id="quantity" value="{{ item_quantity if item_quantity > 0 else 1 }}" min="1"
                                 max="{{ product.stock }}">
                             <button type="button" class="qty-btn" onclick="increaseQty()">+</button>
                         </div>
+                        {% if item_quantity > 0 %}
+                        <div class="current-qty-info" style="margin-top: 5px; color: #28a745;">
+                            In your cart: <strong>{{ item_quantity }}</strong>
+                        </div>
+                        {% endif %}
                     </div>
 
                     <div class="product-actions-detail">
